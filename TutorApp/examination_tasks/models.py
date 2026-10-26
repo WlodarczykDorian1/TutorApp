@@ -1,11 +1,9 @@
 import os
 
 from courses.choices import SubjectChoices
-from courses.models import Topic
-from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models import Q
+from django.db.models import F, Q
 from examination_tasks.choices import (
     E8_EXAM_FORMULAS,
     LEVEL_CHOICES,
@@ -93,7 +91,7 @@ class Exam(models.Model):
                         formula__in=E8_EXAM_FORMULAS,
                     )
                 ),
-                name="exam_fields_match_exam_type",
+                name="exam_valid_level_type_formula",
             ),
         ]
         ordering = ["-year", "-month", "-exam_type", "-level_type"]
@@ -133,45 +131,58 @@ def exam_task_upload_path(instance, filename):
 
 
 class ExamTask(models.Model):
+    """
+    A single examination task.
+
+    Each exam task has at least one ExamSubtask, even without sub-questions.
+    Exam task content without sub-questions can be found in ExamSubtask.
+    Pages containing the task and their solutions are calculated
+    automatically on the basis of the coordinates of the clips
+    from ExamTaskFragment.
+    Pages are empty as long as the clips do not exist.
+
+    Attributes:
+        exam: An exam that includes a task.
+        number: A task number that is unique within the exam.
+        intro_content: Intro of the task,
+            is empty when task has no sub-questions; its content is in ExamSubtask.
+        intro_screen: Task introduction screen,
+            is empty when task has no sub-questions; its content is in ExamSubtask.
+        start_page: Page where the task begins.
+        end_page: Page where the task ends.
+        solution_start_page: Page where the task solution begins.
+        solution_end_page: Page where the task solution ends.
+    """
+
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name="tasks")
     number = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1)],
         verbose_name="Number",
     )
-    task_screen = models.FileField(
-        upload_to=exam_task_upload_path,
-        null=False,
-        blank=False,
-        verbose_name="Task PDF",
+    intro_content = models.TextField(
+        blank=True,
+        help_text="The extracted content of the intro task from the PDF file.",
     )
-    topic = models.ForeignKey(
-        Topic,
-        on_delete=models.SET_NULL,
-        related_name="exam_tasks",
-        verbose_name="Topic",
+    intro_screen = models.ImageField(
+        upload_to="examtask/images", verbose_name="Task intro screen", blank=True
+    )
+    start_page = models.PositiveSmallIntegerField(
+        editable=False,
         null=True,
-        blank=True,
+        help_text="Exam task start page",
     )
-    task_content = models.TextField(
-        blank=True,
-        help_text="The extracted content of the task from the PDF file.",
+    end_page = models.PositiveSmallIntegerField(
+        editable=False, null=True, help_text="Exam task end page"
     )
-    task_pages = models.CharField(
-        max_length=20,
-        blank=True,
-        help_text="Page number(s) in the PDF, e.g., '5' or '5-6'.",
-        verbose_name="Task Pages",
+    solution_start_page = models.PositiveSmallIntegerField(
+        editable=False,
+        null=True,
+        help_text="Exam task solution start page",
     )
-    answer_pages = models.CharField(
-        max_length=20,
-        blank=True,
-        help_text="Page number(s) in the PDF with the solution.",
-        verbose_name="Answer Pages",
-    )
-    completed_by = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name="completed_exam_tasks",
-        blank=True,
+    solution_end_page = models.PositiveSmallIntegerField(
+        editable=False,
+        null=True,
+        help_text="Exam task solution end page",
     )
 
     class Meta:
@@ -186,6 +197,30 @@ class ExamTask(models.Model):
                     number__gte=1,
                 ),
                 name="exam_task_positive_number",
+            ),
+            models.CheckConstraint(
+                condition=Q(
+                    start_page__gte=1,
+                ),
+                name="exam_task_positive_start_page",
+            ),
+            models.CheckConstraint(
+                condition=Q(
+                    solution_start_page__gte=1,
+                ),
+                name="exam_task_positive_solution_start_page",
+            ),
+            models.CheckConstraint(
+                condition=Q(
+                    start_page__lte=F("end_page"),
+                ),
+                name="exam_task_valid_start_page_end_page",
+            ),
+            models.CheckConstraint(
+                condition=Q(
+                    solution_start_page__lte=F("solution_end_page"),
+                ),
+                name="exam_task_valid_solution_start_page_solution_end_page",
             ),
         ]
         verbose_name = "Exam Task"
