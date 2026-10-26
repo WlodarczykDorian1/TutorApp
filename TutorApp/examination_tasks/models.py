@@ -235,3 +235,39 @@ class ExamTask(models.Model):
             A string such as "Mathematics 2023 Matriculation Exam 2024 August - extended - Task 1"
         """
         return f"{self.exam} – Task {self.number}"
+
+
+class ExamSubtask(models.Model):
+    exam_task = models.ForeignKey(
+        ExamTask,
+        on_delete=models.CASCADE,
+        related_name="subtasks",
+    )
+
+    subnumber = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(1)],
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["exam_task", "subnumber"],
+                name="exam_subtask_unique_subnumber",
+                violation_error_message="Exam sub task number already exists in this exam.",
+            ),
+            models.CheckConstraint(
+                condition=Q(
+                    subnumber__gte=1,
+                    subnumber__isnull=False,
+                ),
+                name="exam_subtask_positive_subnumber",
+            ),
+        ]
+        verbose_name = "Exam Subtask"
+        verbose_name_plural = "Exam Subtasks"
+        ordering = ["exam_task", "subnumber"]
+
+    def __str__(self) -> str:
+        pass
