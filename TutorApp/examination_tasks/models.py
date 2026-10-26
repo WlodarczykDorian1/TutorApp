@@ -57,7 +57,7 @@ class Exam(models.Model):
     month = models.IntegerField(choices=MONTH_CHOICES)
     tasks_file = models.FileField(upload_to="exam_pdfs/")
     solutions_file = models.FileField(
-        upload_to="exam_answers_pdfs/", blank=True, null=True
+        upload_to="exam_answers_pdfs/",
     )
     level_type = models.IntegerField(
         choices=LEVEL_CHOICES,
