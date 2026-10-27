@@ -248,6 +248,7 @@ class ExamSubtask(models.Model):
         null=True,
         blank=True,
         validators=[MinValueValidator(1)],
+        verbose_name="Subnumber",
     )
 
     class Meta:
@@ -255,12 +256,12 @@ class ExamSubtask(models.Model):
             models.UniqueConstraint(
                 fields=["exam_task", "subnumber"],
                 name="exam_subtask_unique_subnumber",
-                violation_error_message="Exam sub task number already exists in this exam.",
+                violation_error_message="Exam sub task number already exists in this task.",
+                nulls_distinct=False,
             ),
             models.CheckConstraint(
                 condition=Q(
                     subnumber__gte=1,
-                    subnumber__isnull=False,
                 ),
                 name="exam_subtask_positive_subnumber",
             ),
@@ -270,4 +271,7 @@ class ExamSubtask(models.Model):
         ordering = ["exam_task", "subnumber"]
 
     def __str__(self) -> str:
-        pass
+        if self.subnumber is not None:
+            return f"{self.exam_task}.{self.subnumber}"
+
+        return f"{self.exam_task}"
