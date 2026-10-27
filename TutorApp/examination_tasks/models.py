@@ -1,6 +1,7 @@
 import os
 
 from courses.choices import SubjectChoices
+from courses.models import Topic
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F, Q
@@ -164,7 +165,10 @@ class ExamTask(models.Model):
         help_text="The extracted content of the intro task from the PDF file.",
     )
     intro_screen = models.ImageField(
-        upload_to="examtask/images", verbose_name="Task intro screen", blank=True
+        upload_to="examtask/images",
+        verbose_name="Task intro screen",
+        blank=True,
+        editable=False,
     )
     start_page = models.PositiveSmallIntegerField(
         editable=False,
@@ -249,6 +253,25 @@ class ExamSubtask(models.Model):
         blank=True,
         validators=[MinValueValidator(1)],
         verbose_name="Subnumber",
+    )
+    content = models.TextField(
+        blank=True,
+        help_text="The extracted content of the sub task from the PDF file.",
+    )
+
+    instruction_screen = models.ImageField(
+        upload_to="examtask/images",
+        verbose_name="Subtask instruction screen",
+        blank=True,
+    )
+
+    solution_screen = models.ImageField(
+        upload_to="examtask/images", verbose_name="Subtask solution screen", blank=True
+    )
+
+    topics = models.ManyToManyField(
+        Topic,
+        related_name="exam_subtasks",
     )
 
     class Meta:
