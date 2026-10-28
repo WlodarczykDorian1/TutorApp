@@ -5,6 +5,7 @@ from courses.models import Topic
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F, Q
+from django.utils.translation import gettext_lazy as _
 from examination_tasks.choices import (
     E8_EXAM_FORMULAS,
     LEVEL_CHOICES,
@@ -356,3 +357,37 @@ class UserExamSubtaskCompletion(models.Model):
 
     def __str__(self) -> str:
         return f"{self.exam_subtask} - {self.user}"
+
+
+class ExamTaskFragment(models.Model):
+    class FragmentType(models.IntegerChoices):
+        INTRO = 1, _("Intro")
+        INSTRUCTION = 2, _("Instruction")
+        SOLUTION = 3, _("Solution")
+
+    fragment_type = models.IntegerField(
+        choices=FragmentType.choices,
+        verbose_name="Fragment type",
+    )
+
+    exam_task = models.ForeignKey(
+        ExamTask,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="fragments",
+        verbose_name="exam task",
+    )
+
+    exam_subtask = models.ForeignKey(
+        ExamSubtask,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="fragments",
+        verbose_name="exam subtask",
+    )
+
+    class Meta:
+        verbose_name = "Exam Task Fragment"
+        verbose_name_plural = "Exam Task Fragments"
