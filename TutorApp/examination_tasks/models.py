@@ -1,5 +1,6 @@
 import os
 
+from core import settings
 from courses.choices import SubjectChoices
 from courses.models import Topic
 from django.core.validators import MinValueValidator
@@ -15,8 +16,6 @@ from examination_tasks.choices import (
     FormulaChoices,
     FragmentTypeChoices,
 )
-
-from TutorApp.core import settings
 
 
 class Exam(models.Model):
