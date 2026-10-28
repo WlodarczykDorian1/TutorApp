@@ -388,6 +388,19 @@ class ExamTaskFragment(models.Model):
         verbose_name="exam subtask",
     )
 
+    page = models.PositiveSmallIntegerField(
+        verbose_name="Page",
+        help_text="The page containing the task or the solution",
+    )
+
+    y_start = models.FloatField(
+        help_text="The start of the y position of the fragment in fraction from page height (0-1)",
+    )
+
+    y_end = models.FloatField(
+        help_text="The end of the y position of the fragment in fraction from page height (0-1)",
+    )
+
     class Meta:
         verbose_name = "Exam Task Fragment"
         verbose_name_plural = "Exam Task Fragments"
