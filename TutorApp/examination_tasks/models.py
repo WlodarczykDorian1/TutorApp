@@ -420,3 +420,15 @@ class ExamTaskFragment(models.Model):
         ]
         verbose_name = "Exam Task Fragment"
         verbose_name_plural = "Exam Task Fragments"
+        ordering = ["fragment_type", "order"]
+
+    def __str__(self) -> str:
+        """
+        Return a human-readable description of the exam task fragment.
+
+        Returns:
+            A string such as "Mathematics ... – Instruction #1 (Page 4)"
+        """
+        owner = self.exam_task or self.exam_subtask
+
+        return f"{owner} – {self.get_fragment_type_display()} #{self.order} (Page {self.page})"
