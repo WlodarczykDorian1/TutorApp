@@ -440,6 +440,12 @@ class ExamTaskFragment(models.Model):
                 ),
                 name="exam_task_fragment_valid_y_start_y_end",
             ),
+            models.CheckConstraint(
+                condition=(Q(page__gte=1)), name="exam_task_fragment_positive_page"
+            ),
+            models.CheckConstraint(
+                condition=(Q(order__gte=1)), name="exam_task_fragment_positive_order"
+            ),
         ]
         verbose_name = "Exam Task Fragment"
         verbose_name_plural = "Exam Task Fragments"
