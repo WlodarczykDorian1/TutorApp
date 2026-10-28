@@ -5,7 +5,6 @@ from courses.models import Topic
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F, Q
-from django.utils.translation import gettext_lazy as _
 from examination_tasks.choices import (
     E8_EXAM_FORMULAS,
     LEVEL_CHOICES,
@@ -14,6 +13,7 @@ from examination_tasks.choices import (
     YEAR_CHOICES,
     ExamTypeChoices,
     FormulaChoices,
+    FragmentTypeChoices,
 )
 
 from TutorApp.core import settings
@@ -360,13 +360,8 @@ class UserExamSubtaskCompletion(models.Model):
 
 
 class ExamTaskFragment(models.Model):
-    class FragmentType(models.IntegerChoices):
-        INTRO = 1, _("Intro")
-        INSTRUCTION = 2, _("Instruction")
-        SOLUTION = 3, _("Solution")
-
     fragment_type = models.IntegerField(
-        choices=FragmentType.choices,
+        choices=FragmentTypeChoices.choices,
         verbose_name="Fragment type",
     )
 
@@ -416,6 +411,24 @@ class ExamTaskFragment(models.Model):
             models.UniqueConstraint(
                 fields=["exam_subtask", "fragment_type", "order"],
                 name="exam_task_fragment_unique_exam_subtask_fragment_type_order",
+            ),
+            models.CheckConstraint(
+                condition=(
+                    Q(
+                        fragment_type=FragmentTypeChoices.INTRO,
+                        exam_task__isnull=False,
+                        exam_subtask__isnull=True,
+                    )
+                    | Q(
+                        fragment_type__in=[
+                            FragmentTypeChoices.INSTRUCTION,
+                            FragmentTypeChoices.SOLUTION,
+                        ],
+                        exam_task__isnull=True,
+                        exam_subtask__isnull=False,
+                    )
+                ),
+                name="exam_task_fragment_valid_fragment_type_exam_task_exam_subtask",
             ),
         ]
         verbose_name = "Exam Task Fragment"

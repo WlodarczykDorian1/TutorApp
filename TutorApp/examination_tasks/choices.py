@@ -54,3 +54,9 @@ E8_EXAM_FORMULAS = (
     FormulaChoices.E8_2018,
     FormulaChoices.EXAM_BEFORE_E8_2002_2019,
 )
+
+
+class FragmentTypeChoices(models.IntegerChoices):
+    INTRO = 1, _("Intro")
+    INSTRUCTION = 2, _("Instruction")
+    SOLUTION = 3, _("Solution")
