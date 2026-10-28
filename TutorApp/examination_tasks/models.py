@@ -15,6 +15,8 @@ from examination_tasks.choices import (
     FormulaChoices,
 )
 
+from TutorApp.core import settings
+
 
 class Exam(models.Model):
     """
@@ -288,6 +290,13 @@ class ExamSubtask(models.Model):
         verbose_name="Explanation timestamp",
     )
 
+    completed_by = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        through="UserExamSubtaskCompletion",
+        blank=True,
+        related_name="completed_exam_subtasks",
+    )
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -312,3 +321,38 @@ class ExamSubtask(models.Model):
             return f"{self.exam_task}.{self.subnumber}"
 
         return f"{self.exam_task}"
+
+
+class UserExamSubtaskCompletion(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="User",
+        related_name="exam_subtask_completions",
+    )
+
+    exam_subtask = models.ForeignKey(
+        ExamSubtask,
+        on_delete=models.CASCADE,
+        related_name="exam_subtask_completions",
+        verbose_name="Exam Subtask",
+    )
+
+    completed_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "exam_subtask"],
+                name="user_exam_subtask_completion_unique_user_exam_subtask",
+                violation_error_message="User already finished this subtask",
+            )
+        ]
+
+        verbose_name = "User Exam Subtask Completion"
+        verbose_name_plural = "User Exam Subtask Completions"
+
+    def __str__(self) -> str:
+        return f"{self.exam_subtask} - {self.user}"
