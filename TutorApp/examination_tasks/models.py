@@ -256,7 +256,7 @@ class ExamSubtask(models.Model):
     )
     instruction_content = models.TextField(
         blank=True,
-        help_text="The extracted content of the sub task from the PDF file.",
+        help_text="The extracted content of the instruction of the  sub task from the PDF file.",
     )
 
     instruction_screen = models.ImageField(
@@ -276,6 +276,16 @@ class ExamSubtask(models.Model):
     topics = models.ManyToManyField(
         Topic,
         related_name="exam_subtasks",
+        verbose_name="Topics",
+    )
+
+    explanation_timestamp = models.ForeignKey(
+        "videos.VideoTimestamp",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="exam_subtasks",
+        verbose_name="Explanation timestamp",
     )
 
     class Meta:
