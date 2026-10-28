@@ -254,7 +254,7 @@ class ExamSubtask(models.Model):
         validators=[MinValueValidator(1)],
         verbose_name="Subnumber",
     )
-    content = models.TextField(
+    instruction_content = models.TextField(
         blank=True,
         help_text="The extracted content of the sub task from the PDF file.",
     )
@@ -263,10 +263,14 @@ class ExamSubtask(models.Model):
         upload_to="examtask/images",
         verbose_name="Subtask instruction screen",
         blank=True,
+        editable=False,
     )
 
     solution_screen = models.ImageField(
-        upload_to="examtask/images", verbose_name="Subtask solution screen", blank=True
+        upload_to="examtask/images",
+        verbose_name="Subtask solution screen",
+        blank=True,
+        editable=False,
     )
 
     topics = models.ManyToManyField(
