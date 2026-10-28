@@ -430,6 +430,16 @@ class ExamTaskFragment(models.Model):
                 ),
                 name="exam_task_fragment_valid_fragment_type_exam_task_exam_subtask",
             ),
+            models.CheckConstraint(
+                condition=(
+                    Q(
+                        y_start__gte=0,
+                        y_start__lt=F("y_end"),
+                        y_end__lte=1,
+                    )
+                ),
+                name="exam_task_fragment_valid_y_start_y_end",
+            ),
         ]
         verbose_name = "Exam Task Fragment"
         verbose_name_plural = "Exam Task Fragments"
