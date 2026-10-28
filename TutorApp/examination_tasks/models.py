@@ -371,7 +371,7 @@ class ExamTaskFragment(models.Model):
         null=True,
         blank=True,
         related_name="fragments",
-        verbose_name="exam task",
+        verbose_name="Exam task",
     )
 
     exam_subtask = models.ForeignKey(
@@ -380,7 +380,7 @@ class ExamTaskFragment(models.Model):
         null=True,
         blank=True,
         related_name="fragments",
-        verbose_name="exam subtask",
+        verbose_name="Exam subtask",
     )
 
     page = models.PositiveSmallIntegerField(
@@ -389,10 +389,12 @@ class ExamTaskFragment(models.Model):
     )
 
     y_start = models.FloatField(
+        verbose_name="Y start",
         help_text="The start of the y position of the fragment in fraction from page height (0-1)",
     )
 
     y_end = models.FloatField(
+        verbose_name="Y end",
         help_text="The end of the y position of the fragment in fraction from page height (0-1)",
     )
 
