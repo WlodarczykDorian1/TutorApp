@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TutorApp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-29 11:31+0100\n"
+"POT-Creation-Date: 2026-10-29 11:36+0100\n"
 "PO-Revision-Date: 2025-06-14 23:37+0200\n"
 "Last-Translator: ChatGPT\n"
 "Language-Team: Polish <pl@translations>\n"
@@ -634,6 +634,70 @@ msgstr "Wykonanie podzadań egzaminu użytkownika"
 msgid "User Exam Subtask Completions"
 msgstr "Liczba wykonanych podzadań w ramach egzaminu użytkownika"
 
+#: .\examination_tasks\models.py:371
+msgid "Fragment type"
+msgstr "Typ fragmentu"
+
+#: .\examination_tasks\models.py:380
+msgid "Exam task"
+msgstr "Zadanie egzaminacyjne"
+
+#: .\examination_tasks\models.py:389
+msgid "Exam subtask"
+msgstr "Podzadanie egzaminacyjne"
+
+#: .\examination_tasks\models.py:393
+#: .\templates\courses\training_task_detail.html:35
+#: .\templates\courses\training_tasks_list.html:86
+msgid "Page"
+msgstr "Strona"
+
+#: .\examination_tasks\models.py:394
+msgid "The page containing the task or the solution"
+msgstr "Strona zawierająca zadanie lub rozwiązanie"
+
+#: .\examination_tasks\models.py:398
+msgid "Y start"
+msgstr "Y start"
+
+#: .\examination_tasks\models.py:400
+msgid ""
+"The start of the y position of the fragment in fraction from page height "
+"(0-1)"
+msgstr ""
+"Początek pozycji y fragmentu wyrażony jako ułamek wysokości strony "
+"(0–1)"
+
+#: .\examination_tasks\models.py:405
+msgid "Y end"
+msgstr "Y końca"
+
+#: .\examination_tasks\models.py:407
+msgid ""
+"The end of the y position of the fragment in fraction from page height (0-1)"
+msgstr ""
+"Końcowa wartość pozycji y fragmentu wyrażona jako ułamek wysokości strony (0–1)"
+
+#: .\examination_tasks\models.py:412
+msgid "Order"
+msgstr "Kolejność"
+
+#: .\examination_tasks\models.py:414
+msgid ""
+"Position of this fragment when fragments are stacked into one image. "
+"Numbered from 1 separately for each task/subtask and fragment type."
+msgstr ""
+"Położenie tego fragmentu po ułożeniu wszystkich fragmentów w jeden obraz."
+"Numerowane od 1 osobno dla każdego zadania/podzadania i typu fragmentu."
+
+#: .\examination_tasks\models.py:464
+msgid "Exam Task Fragment"
+msgstr "Fragment zadania egzaminacyjnego"
+
+#: .\examination_tasks\models.py:465
+msgid "Exam Task Fragments"
+msgstr "Fragmenty zadań egzaminacyjnych"
+
 #: .\examination_tasks\views\exam_task_views.py:76
 msgid "Add New Exam Task"
 msgstr "Dodaj Nowe Zadanie Egzaminacyjne"
@@ -1007,11 +1071,6 @@ msgstr "Poziom trudności"
 #: .\templates\courses\training_task_detail.html:20
 msgid "Source"
 msgstr "Pochodzenie Zadania"
-
-#: .\templates\courses\training_task_detail.html:35
-#: .\templates\courses\training_tasks_list.html:86
-msgid "Page"
-msgstr "Strona"
 
 #: .\templates\courses\training_task_detail.html:49
 msgid "Task image"
