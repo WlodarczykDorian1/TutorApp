@@ -414,6 +414,30 @@ class UserExamSubtaskCompletion(models.Model):
 
 
 class ExamTaskFragment(models.Model):
+    """
+    A rectangle clip from PDF file.
+
+    Screens (intro, instruction, solution) and ExamTask page ranges
+    are generated from fragments.
+    Fragments are part of exam task or exam subtask. One of them
+    is empty.
+    INTRO fragments belong to ExamTask;
+    INSTRUCTION and SOLUTION fragments belong to ExamSubtask.
+    Coordinates y_start and y_end are stored in fractions
+    where 0 is top of the page and 1 is bottom of the page.
+    Fragment is cropped from either the exam or the solution sheet based on fragment type.
+
+    Attributes:
+        fragment_type: Type of the fragment.
+            There are 3 types of fragments: INTRO, INSTRUCTION, SOLUTION.
+        exam_task: Exam task. Is not empty when fragment belongs to exam task.
+        exam_subtask: Exam subtask. Is not empty when fragment belongs to exam subtask.
+        page: Page from which fragment is taken.
+        y_start: Y coordinate where the fragment begins.
+        y_end: Y coordinate where the fragment ends.
+        order: Stacking order within the same owner and fragment type.
+    """
+
     fragment_type = models.IntegerField(
         choices=FragmentTypeChoices.choices,
         verbose_name=_("Fragment type"),
