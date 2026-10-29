@@ -368,7 +368,7 @@ class UserExamSubtaskCompletion(models.Model):
 class ExamTaskFragment(models.Model):
     fragment_type = models.IntegerField(
         choices=FragmentTypeChoices.choices,
-        verbose_name="Fragment type",
+        verbose_name=_("Fragment type"),
     )
 
     exam_task = models.ForeignKey(
@@ -377,7 +377,7 @@ class ExamTaskFragment(models.Model):
         null=True,
         blank=True,
         related_name="fragments",
-        verbose_name="Exam task",
+        verbose_name=_("Exam task"),
     )
 
     exam_subtask = models.ForeignKey(
@@ -386,28 +386,34 @@ class ExamTaskFragment(models.Model):
         null=True,
         blank=True,
         related_name="fragments",
-        verbose_name="Exam subtask",
+        verbose_name=_("Exam subtask"),
     )
 
     page = models.PositiveSmallIntegerField(
-        verbose_name="Page",
-        help_text="The page containing the task or the solution",
+        verbose_name=_("Page"),
+        help_text=_("The page containing the task or the solution"),
     )
 
     y_start = models.FloatField(
-        verbose_name="Y start",
-        help_text="The start of the y position of the fragment in fraction from page height (0-1)",
+        verbose_name=_("Y start"),
+        help_text=_(
+            "The start of the y position of the fragment in fraction from page height (0-1)"
+        ),
     )
 
     y_end = models.FloatField(
-        verbose_name="Y end",
-        help_text="The end of the y position of the fragment in fraction from page height (0-1)",
+        verbose_name=_("Y end"),
+        help_text=_(
+            "The end of the y position of the fragment in fraction from page height (0-1)"
+        ),
     )
 
     order = models.PositiveSmallIntegerField(
-        verbose_name="Order",
-        help_text="Position of this fragment when fragments are stacked into one image. "
-        "Numbered from 1 separately for each task/subtask and fragment type.",
+        verbose_name=_("Order"),
+        help_text=_(
+            "Position of this fragment when fragments are stacked into one image. "
+            "Numbered from 1 separately for each task/subtask and fragment type."
+        ),
     )
 
     class Meta:
@@ -455,8 +461,8 @@ class ExamTaskFragment(models.Model):
                 condition=(Q(order__gte=1)), name="exam_task_fragment_positive_order"
             ),
         ]
-        verbose_name = "Exam Task Fragment"
-        verbose_name_plural = "Exam Task Fragments"
+        verbose_name = _("Exam Task Fragment")
+        verbose_name_plural = _("Exam Task Fragments")
         ordering = ["fragment_type", "order"]
 
     def __str__(self) -> str:
