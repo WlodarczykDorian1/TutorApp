@@ -6,6 +6,7 @@ from courses.models import Topic
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F, Q
+from django.utils.translation import gettext_lazy as _
 from examination_tasks.choices import (
     E8_EXAM_FORMULAS,
     LEVEL_CHOICES,
@@ -44,15 +45,15 @@ class Exam(models.Model):
     exam_type = models.IntegerField(
         choices=ExamTypeChoices.choices,
         default=ExamTypeChoices.MATRICULATION,
-        verbose_name="Exam type",
+        verbose_name=_("Exam type"),
     )
     subject = models.IntegerField(
         choices=SubjectChoices.choices,
-        verbose_name="Subject",
+        verbose_name=_("Subject"),
     )
     formula = models.IntegerField(
         choices=FormulaChoices.choices,
-        verbose_name="Formula",
+        verbose_name=_("Formula"),
     )
     year = models.IntegerField(choices=YEAR_CHOICES)
     month = models.IntegerField(choices=MONTH_CHOICES)
@@ -64,7 +65,7 @@ class Exam(models.Model):
         choices=LEVEL_CHOICES,
         null=True,
         blank=True,
-        help_text="Exam level: basic or extended (Matriculation only)",
+        help_text=_("Exam level: basic or extended (Matriculation only)"),
     )
 
     class Meta:
