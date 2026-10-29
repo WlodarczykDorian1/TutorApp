@@ -550,56 +550,49 @@ msgstr "Listopad"
 
 #: .\examination_tasks\models.py:168
 msgid "The extracted content of the intro task from the PDF file."
-msgstr ""
+msgstr "Treść zadania wprowadzającego wyodrębniona z pliku PDF."
 
 #: .\examination_tasks\models.py:172
-#, fuzzy
-#| msgid "Task content"
 msgid "Task intro screen"
-msgstr "Treść Zadania"
+msgstr "Ekran wprowadzający do zadania"
 
 #: .\examination_tasks\models.py:179
 msgid "Exam task start page"
-msgstr ""
+msgstr "Strona startowa zadania egzaminacyjnego"
 
 #: .\examination_tasks\models.py:182
 msgid "Exam task end page"
-msgstr ""
+msgstr "Strona końcowa zadania egzaminacyjnego"
 
 #: .\examination_tasks\models.py:187
 msgid "Exam task solution start page"
-msgstr ""
+msgstr "Strona początkowa rozwiązania zadania egzaminacyjnego"
 
 #: .\examination_tasks\models.py:192
 msgid "Exam task solution end page"
-msgstr ""
+msgstr "Ostatnia strona rozwiązania zadania egzaminacyjnego"
 
 #: .\examination_tasks\models.py:200
-#, fuzzy
-#| msgid "Task %(task_id)s already exists for this exam."
 msgid "Exam task number already exists in this exam."
-msgstr "Zadanie %(task_id)s już istnieje dla tego egzaminu."
+msgstr "Numer zadania egzaminacyjnego już występuje w tym egzaminie."
 
 #: .\examination_tasks\models.py:233
-#, fuzzy
-#| msgid "Add Exam Task"
 msgid "Exam Task"
-msgstr "Dodaj Zadanie Egzaminacyjne"
+msgstr "Zadanie egzaminacyjne"
 
 #: .\examination_tasks\models.py:234
-#, fuzzy
-#| msgid "Add Exam Task"
 msgid "Exam Tasks"
-msgstr "Dodaj Zadanie Egzaminacyjne"
+msgstr "Zadania egzaminacyjne"
 
 #: .\examination_tasks\models.py:258
 msgid "Subnumber"
-msgstr ""
+msgstr "Podnumer"
 
 #: .\examination_tasks\models.py:262
 msgid ""
 "The extracted content of the instruction of the  sub task from the PDF file."
 msgstr ""
+"Treść instrukcji dotyczącej podzadania, wyodrębniona z pliku PDF."
 
 #: .\examination_tasks\models.py:267
 msgid "Subtask instruction screen"
@@ -607,41 +600,27 @@ msgstr ""
 
 #: .\examination_tasks\models.py:274
 msgid "Subtask solution screen"
-msgstr ""
+msgstr "Ekran instrukcji dotyczącej podzadania"
 
 #: .\examination_tasks\models.py:282
-#, fuzzy
-#| msgid "Topic"
 msgid "Topics"
-msgstr "Temat"
+msgstr "Tematy"
 
 #: .\examination_tasks\models.py:291
-#, fuzzy
-#| msgid "Explanation Timestamp"
 msgid "Explanation timestamp"
 msgstr "Timestamp z wyjaśnieniem"
 
-#: .\examination_tasks\models.py:298
-msgid "completed_exam_subtasks"
-msgstr ""
-
 #: .\examination_tasks\models.py:306
-#, fuzzy
-#| msgid "Task %(task_id)s already exists for this exam."
 msgid "Exam sub task number already exists in this task."
-msgstr "Zadanie %(task_id)s już istnieje dla tego egzaminu."
+msgstr "Numer podzadania egzaminacyjnego już istnieje w tym zadaniu."
 
 #: .\examination_tasks\models.py:316
-#, fuzzy
-#| msgid "Add Exam Task"
 msgid "Exam Subtask"
-msgstr "Dodaj Zadanie Egzaminacyjne"
+msgstr "Podzadanie egzaminacyjne"
 
 #: .\examination_tasks\models.py:317
-#, fuzzy
-#| msgid "Add Exam Task"
 msgid "Exam Subtasks"
-msgstr "Dodaj Zadanie Egzaminacyjne"
+msgstr "Podzadania egzaminacyjne"
 
 #: .\examination_tasks\views\exam_task_views.py:76
 msgid "Add New Exam Task"

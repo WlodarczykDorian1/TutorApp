@@ -299,7 +299,7 @@ class ExamSubtask(models.Model):
         settings.AUTH_USER_MODEL,
         through="UserExamSubtaskCompletion",
         blank=True,
-        related_name=_("completed_exam_subtasks"),
+        related_name="completed_exam_subtasks",
     )
 
     class Meta:
