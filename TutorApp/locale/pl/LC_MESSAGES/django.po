@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TutorApp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-29 11:36+0100\n"
+"POT-Creation-Date: 2026-10-29 12:28+0100\n"
 "PO-Revision-Date: 2025-06-14 23:37+0200\n"
 "Last-Translator: ChatGPT\n"
 "Language-Team: Polish <pl@translations>\n"
@@ -151,7 +151,7 @@ msgid "School Level"
 msgstr "Poziom szkoły"
 
 #: .\courses\forms\book_forms.py:26 .\courses\forms\section_forms.py:12
-#: .\examination_tasks\models.py:52 .\motifs\forms\motif_forms.py:17
+#: .\examination_tasks\models.py:53 .\motifs\forms\motif_forms.py:17
 #: .\motifs\models.py:25 .\quizes\filters.py:43
 #: .\templates\motifs\motif_list.html:34 .\templates\quizes\quiz_list.html:37
 #: .\videos\filters.py:42 .\videos\forms\video_forms.py:18
@@ -256,7 +256,7 @@ msgstr "Zadanie z książki wymaga podania książki"
 msgid "Book task requires a page number."
 msgstr "Zadanie z ksiązki wymaga podania numeru strony"
 
-#: .\courses\models.py:158 .\examination_tasks\models.py:337
+#: .\courses\models.py:158 .\examination_tasks\models.py:376
 #: .\users\models.py:24
 msgid "User"
 msgstr "Użytkownik"
@@ -531,170 +531,180 @@ msgstr "Potwierdzam, że podgląd zadania jest poprawny"
 msgid "You must confirm the preview before saving."
 msgstr "Przed zapisaniem musisz zatwierdzić podgląd."
 
-#: .\examination_tasks\models.py:48
+#: .\examination_tasks\models.py:49
 msgid "Exam type"
 msgstr "Rodzaj egzaminu"
 
-#: .\examination_tasks\models.py:56
+#: .\examination_tasks\models.py:57
 msgid "Formula"
 msgstr "Formuła"
 
-#: .\examination_tasks\models.py:68
+#: .\examination_tasks\models.py:69
 msgid "Exam level: basic or extended (Matriculation only)"
 msgstr "Poziom egzaminu: podstawowy lub rozszerzony (tylko Matura)"
 
-#: .\examination_tasks\models.py:164
+#: .\examination_tasks\models.py:165
 #, fuzzy
 #| msgid "November"
 msgid "Number"
 msgstr "Listopad"
 
-#: .\examination_tasks\models.py:168
+#: .\examination_tasks\models.py:169
 msgid "The extracted content of the intro task from the PDF file."
 msgstr "Treść zadania wprowadzającego wyodrębniona z pliku PDF."
 
-#: .\examination_tasks\models.py:172
+#: .\examination_tasks\models.py:173
 msgid "Task intro screen"
 msgstr "Ekran wprowadzający do zadania"
 
-#: .\examination_tasks\models.py:179
+#: .\examination_tasks\models.py:180
 msgid "Exam task start page"
 msgstr "Strona startowa zadania egzaminacyjnego"
 
-#: .\examination_tasks\models.py:182
+#: .\examination_tasks\models.py:183
 msgid "Exam task end page"
 msgstr "Strona końcowa zadania egzaminacyjnego"
 
-#: .\examination_tasks\models.py:187
+#: .\examination_tasks\models.py:188
 msgid "Exam task solution start page"
 msgstr "Strona początkowa rozwiązania zadania egzaminacyjnego"
 
-#: .\examination_tasks\models.py:192
+#: .\examination_tasks\models.py:193
 msgid "Exam task solution end page"
 msgstr "Ostatnia strona rozwiązania zadania egzaminacyjnego"
 
-#: .\examination_tasks\models.py:201
+#: .\examination_tasks\models.py:202
 msgid "Exam task number already exists in this exam."
 msgstr "Numer zadania egzaminacyjnego już występuje w tym egzaminie."
 
-#: .\examination_tasks\models.py:235
+#: .\examination_tasks\models.py:236
 msgid "Exam Task"
 msgstr "Zadanie egzaminacyjne"
 
-#: .\examination_tasks\models.py:236
+#: .\examination_tasks\models.py:237
 msgid "Exam Tasks"
 msgstr "Zadania egzaminacyjne"
 
-#: .\examination_tasks\models.py:260
+#: .\examination_tasks\models.py:282
 msgid "Subnumber"
 msgstr "Podnumer"
 
-#: .\examination_tasks\models.py:265
+#: .\examination_tasks\models.py:287
+#, fuzzy
+#| msgid ""
+#| "The extracted content of the instruction of the  sub task from the PDF "
+#| "file."
 msgid ""
-"The extracted content of the instruction of the  sub task from the PDF file."
+"The extracted content of the instruction of the sub task from the PDF file."
 msgstr "Treść instrukcji dotyczącej podzadania, wyodrębniona z pliku PDF."
 
-#: .\examination_tasks\models.py:271
+#: .\examination_tasks\models.py:293
 msgid "Subtask instruction screen"
 msgstr ""
 
-#: .\examination_tasks\models.py:278
+#: .\examination_tasks\models.py:300
 msgid "Subtask solution screen"
 msgstr "Ekran instrukcji dotyczącej podzadania"
 
-#: .\examination_tasks\models.py:286
+#: .\examination_tasks\models.py:308
 msgid "Topics"
 msgstr "Tematy"
 
-#: .\examination_tasks\models.py:295
+#: .\examination_tasks\models.py:317
 msgid "Explanation timestamp"
 msgstr "Timestamp z wyjaśnieniem"
 
-#: .\examination_tasks\models.py:311
+#: .\examination_tasks\models.py:333
 msgid "Exam sub task number already exists in this task."
 msgstr "Numer podzadania egzaminacyjnego już istnieje w tym zadaniu."
 
-#: .\examination_tasks\models.py:322 .\examination_tasks\models.py:345
+#: .\examination_tasks\models.py:344 .\examination_tasks\models.py:384
 msgid "Exam Subtask"
 msgstr "Podzadanie egzaminacyjne"
 
-#: .\examination_tasks\models.py:323
+#: .\examination_tasks\models.py:345
 msgid "Exam Subtasks"
 msgstr "Podzadania egzaminacyjne"
 
-#: .\examination_tasks\models.py:357
-msgid "User already finished this subtask"
+#: .\examination_tasks\models.py:389
+msgid "Completed at"
+msgstr "Ukończono w"
+
+#: .\examination_tasks\models.py:397
+#, fuzzy
+#| msgid "User already finished this subtask"
+msgid "User already finished this subtask."
 msgstr "Użytkownik już wykonał to podzadanie"
 
-#: .\examination_tasks\models.py:361
+#: .\examination_tasks\models.py:401
 msgid "User Exam Subtask Completion"
 msgstr "Wykonanie podzadań egzaminu użytkownika"
 
-#: .\examination_tasks\models.py:362
+#: .\examination_tasks\models.py:402
 msgid "User Exam Subtask Completions"
 msgstr "Liczba wykonanych podzadań w ramach egzaminu użytkownika"
 
-#: .\examination_tasks\models.py:371
+#: .\examination_tasks\models.py:418
 msgid "Fragment type"
 msgstr "Typ fragmentu"
 
-#: .\examination_tasks\models.py:380
+#: .\examination_tasks\models.py:427
 msgid "Exam task"
 msgstr "Zadanie egzaminacyjne"
 
-#: .\examination_tasks\models.py:389
+#: .\examination_tasks\models.py:436
 msgid "Exam subtask"
 msgstr "Podzadanie egzaminacyjne"
 
-#: .\examination_tasks\models.py:393
+#: .\examination_tasks\models.py:440
 #: .\templates\courses\training_task_detail.html:35
 #: .\templates\courses\training_tasks_list.html:86
 msgid "Page"
 msgstr "Strona"
 
-#: .\examination_tasks\models.py:394
+#: .\examination_tasks\models.py:441
 msgid "The page containing the task or the solution"
 msgstr "Strona zawierająca zadanie lub rozwiązanie"
 
-#: .\examination_tasks\models.py:398
+#: .\examination_tasks\models.py:445
 msgid "Y start"
 msgstr "Y start"
 
-#: .\examination_tasks\models.py:400
+#: .\examination_tasks\models.py:447
 msgid ""
 "The start of the y position of the fragment in fraction from page height "
 "(0-1)"
 msgstr ""
-"Początek pozycji y fragmentu wyrażony jako ułamek wysokości strony "
-"(0–1)"
+"Początek pozycji y fragmentu wyrażony jako ułamek wysokości strony (0–1)"
 
-#: .\examination_tasks\models.py:405
+#: .\examination_tasks\models.py:452
 msgid "Y end"
 msgstr "Y końca"
 
-#: .\examination_tasks\models.py:407
+#: .\examination_tasks\models.py:454
 msgid ""
 "The end of the y position of the fragment in fraction from page height (0-1)"
 msgstr ""
-"Końcowa wartość pozycji y fragmentu wyrażona jako ułamek wysokości strony (0–1)"
+"Końcowa wartość pozycji y fragmentu wyrażona jako ułamek wysokości strony (0–"
+"1)"
 
-#: .\examination_tasks\models.py:412
+#: .\examination_tasks\models.py:459
 msgid "Order"
 msgstr "Kolejność"
 
-#: .\examination_tasks\models.py:414
+#: .\examination_tasks\models.py:461
 msgid ""
 "Position of this fragment when fragments are stacked into one image. "
 "Numbered from 1 separately for each task/subtask and fragment type."
 msgstr ""
-"Położenie tego fragmentu po ułożeniu wszystkich fragmentów w jeden obraz."
-"Numerowane od 1 osobno dla każdego zadania/podzadania i typu fragmentu."
+"Położenie tego fragmentu po ułożeniu wszystkich fragmentów w jeden "
+"obraz.Numerowane od 1 osobno dla każdego zadania/podzadania i typu fragmentu."
 
-#: .\examination_tasks\models.py:464
+#: .\examination_tasks\models.py:511
 msgid "Exam Task Fragment"
 msgstr "Fragment zadania egzaminacyjnego"
 
-#: .\examination_tasks\models.py:465
+#: .\examination_tasks\models.py:512
 msgid "Exam Task Fragments"
 msgstr "Fragmenty zadań egzaminacyjnych"
 

@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F, Q
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from examination_tasks.choices import (
     E8_EXAM_FORMULAS,
@@ -358,6 +359,18 @@ class ExamSubtask(models.Model):
 
 
 class UserExamSubtaskCompletion(models.Model):
+    """
+    Information which user finished subtask and when.
+
+    This is an intermediary model for ExamSubtask.completed_by.
+    Django automatically sets completed_at while creating.
+
+    Attributes:
+        user: User who finished the subtask.
+        exam_subtask: Exam subtask that has been completed.
+        completed_at: Date and time the subtask was completed on.
+    """
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -374,6 +387,7 @@ class UserExamSubtaskCompletion(models.Model):
 
     completed_at = models.DateTimeField(
         auto_now_add=True,
+        verbose_name=_("Completed at"),
     )
 
     class Meta:
@@ -381,7 +395,7 @@ class UserExamSubtaskCompletion(models.Model):
             models.UniqueConstraint(
                 fields=["user", "exam_subtask"],
                 name="user_exam_subtask_completion_unique_user_exam_subtask",
-                violation_error_message=_("User already finished this subtask"),
+                violation_error_message=_("User already finished this subtask."),
             )
         ]
 
@@ -389,7 +403,14 @@ class UserExamSubtaskCompletion(models.Model):
         verbose_name_plural = _("User Exam Subtask Completions")
 
     def __str__(self) -> str:
-        return f"{self.exam_subtask} - {self.user}"
+        """
+        Return a human-readable description of the exam subtask completion.
+
+        Returns:
+            A string such as "Mathematics ... – Task 12.1 – Marcin Kowalski – 12.10.2026 18:25"
+        """
+        local = timezone.localtime(self.completed_at)
+        return f"{self.exam_subtask} – {self.user} – {local:%d-%m-%y %H:%M}"
 
 
 class ExamTaskFragment(models.Model):
