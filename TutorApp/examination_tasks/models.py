@@ -1,8 +1,8 @@
 import os
 
-from core import settings
 from courses.choices import SubjectChoices
 from courses.models import Topic
+from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F, Q
@@ -247,6 +247,27 @@ class ExamTask(models.Model):
 
 
 class ExamSubtask(models.Model):
+    """
+    A single examination subtask.
+
+    Subtask is the smallest part of the task.
+    Subnumber is empty when the exam task has no sub-questions
+    (only one such subtask is allowed per task).
+    Screens are generated from Page and y coordinates from ExamTaskFragment.
+    Screens are empty as long as the coordinates and page do not exist.
+
+    Attributes:
+        exam_task: An exam task that includes exam subtask.
+        subnumber: Subtask number.
+        instruction_content: Instruction of the subtask.
+        instruction_screen: Task instruction screen.
+        solution_screen: Task solution screen.
+        topics: Topics covered by the subtask.
+        explanation_timestamp: Explanation timestamp to the subtask.
+        completed_by: Users who have completed the subtask.
+            They are stored in UserExamSubtaskCompletion model.
+    """
+
     exam_task = models.ForeignKey(
         ExamTask,
         on_delete=models.CASCADE,
@@ -262,7 +283,7 @@ class ExamSubtask(models.Model):
     instruction_content = models.TextField(
         blank=True,
         help_text=_(
-            "The extracted content of the instruction of the  sub task from the PDF file."
+            "The extracted content of the instruction of the sub task from the PDF file."
         ),
     )
 
@@ -324,6 +345,12 @@ class ExamSubtask(models.Model):
         ordering = ["exam_task", "subnumber"]
 
     def __str__(self) -> str:
+        """
+        Return a human-readable description of the exam subtask.
+
+        Returns:
+            A string such as: "Mathematics ... – Task 12.1" or "Mathematics ... – Task 3"
+        """
         if self.subnumber is not None:
             return f"{self.exam_task}.{self.subnumber}"
 
