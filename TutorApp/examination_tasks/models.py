@@ -161,35 +161,35 @@ class ExamTask(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name="tasks")
     number = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1)],
-        verbose_name="Number",
+        verbose_name=_("Number"),
     )
     intro_content = models.TextField(
         blank=True,
-        help_text="The extracted content of the intro task from the PDF file.",
+        help_text=_("The extracted content of the intro task from the PDF file."),
     )
     intro_screen = models.ImageField(
         upload_to="examtask/images",
-        verbose_name="Task intro screen",
+        verbose_name=_("Task intro screen"),
         blank=True,
         editable=False,
     )
     start_page = models.PositiveSmallIntegerField(
         editable=False,
         null=True,
-        help_text="Exam task start page",
+        help_text=_("Exam task start page"),
     )
     end_page = models.PositiveSmallIntegerField(
-        editable=False, null=True, help_text="Exam task end page"
+        editable=False, null=True, help_text=_("Exam task end page")
     )
     solution_start_page = models.PositiveSmallIntegerField(
         editable=False,
         null=True,
-        help_text="Exam task solution start page",
+        help_text=_("Exam task solution start page"),
     )
     solution_end_page = models.PositiveSmallIntegerField(
         editable=False,
         null=True,
-        help_text="Exam task solution end page",
+        help_text=_("Exam task solution end page"),
     )
 
     class Meta:
@@ -197,7 +197,9 @@ class ExamTask(models.Model):
             models.UniqueConstraint(
                 fields=["exam", "number"],
                 name="exam_task_unique_number",
-                violation_error_message="Exam task number already exists in this exam.",
+                violation_error_message=_(
+                    "Exam task number already exists in this exam."
+                ),
             ),
             models.CheckConstraint(
                 condition=Q(
@@ -230,8 +232,8 @@ class ExamTask(models.Model):
                 name="exam_task_valid_solution_start_page_solution_end_page",
             ),
         ]
-        verbose_name = "Exam Task"
-        verbose_name_plural = "Exam Tasks"
+        verbose_name = _("Exam Task")
+        verbose_name_plural = _("Exam Tasks")
         ordering = ["exam", "number"]
 
     def __str__(self) -> str:
@@ -255,23 +257,25 @@ class ExamSubtask(models.Model):
         null=True,
         blank=True,
         validators=[MinValueValidator(1)],
-        verbose_name="Subnumber",
+        verbose_name=_("Subnumber"),
     )
     instruction_content = models.TextField(
         blank=True,
-        help_text="The extracted content of the instruction of the  sub task from the PDF file.",
+        help_text=_(
+            "The extracted content of the instruction of the  sub task from the PDF file."
+        ),
     )
 
     instruction_screen = models.ImageField(
         upload_to="examtask/images",
-        verbose_name="Subtask instruction screen",
+        verbose_name=_("Subtask instruction screen"),
         blank=True,
         editable=False,
     )
 
     solution_screen = models.ImageField(
         upload_to="examtask/images",
-        verbose_name="Subtask solution screen",
+        verbose_name=_("Subtask solution screen"),
         blank=True,
         editable=False,
     )
@@ -279,7 +283,7 @@ class ExamSubtask(models.Model):
     topics = models.ManyToManyField(
         Topic,
         related_name="exam_subtasks",
-        verbose_name="Topics",
+        verbose_name=_("Topics"),
     )
 
     explanation_timestamp = models.ForeignKey(
@@ -288,14 +292,14 @@ class ExamSubtask(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="exam_subtasks",
-        verbose_name="Explanation timestamp",
+        verbose_name=_("Explanation timestamp"),
     )
 
     completed_by = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through="UserExamSubtaskCompletion",
         blank=True,
-        related_name="completed_exam_subtasks",
+        related_name=_("completed_exam_subtasks"),
     )
 
     class Meta:
@@ -303,7 +307,9 @@ class ExamSubtask(models.Model):
             models.UniqueConstraint(
                 fields=["exam_task", "subnumber"],
                 name="exam_subtask_unique_subnumber",
-                violation_error_message="Exam sub task number already exists in this task.",
+                violation_error_message=_(
+                    "Exam sub task number already exists in this task."
+                ),
                 nulls_distinct=False,
             ),
             models.CheckConstraint(
@@ -313,8 +319,8 @@ class ExamSubtask(models.Model):
                 name="exam_subtask_positive_subnumber",
             ),
         ]
-        verbose_name = "Exam Subtask"
-        verbose_name_plural = "Exam Subtasks"
+        verbose_name = _("Exam Subtask")
+        verbose_name_plural = _("Exam Subtasks")
         ordering = ["exam_task", "subnumber"]
 
     def __str__(self) -> str:
