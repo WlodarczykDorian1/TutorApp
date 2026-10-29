@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TutorApp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 20:53+0200\n"
+"POT-Creation-Date: 2026-10-29 11:19+0100\n"
 "PO-Revision-Date: 2025-06-14 23:37+0200\n"
 "Last-Translator: ChatGPT\n"
 "Language-Team: Polish <pl@translations>\n"
@@ -103,7 +103,6 @@ msgstr "Treść Zadania"
 #: .\courses\filters.py:38 .\motifs\forms\motif_forms.py:18
 #: .\motifs\models.py:32 .\quizes\filters.py:27
 #: .\templates\courses\training_task_detail.html:25
-#: .\templates\examination_tasks\exam_task_search_engine.html:36
 #: .\templates\motifs\motif_list.html:35 .\videos\filters.py:26
 #: .\videos\forms\video_forms.py:24 .\videos\forms\video_forms.py:30
 #: .\videos\forms\video_forms.py:33
@@ -120,7 +119,6 @@ msgstr "Poziom trudności"
 
 #: .\courses\filters.py:55 .\templates\examination_tasks\exam_list.html:22
 #: .\templates\examination_tasks\exam_task_list.html:21
-#: .\templates\examination_tasks\exam_task_search_engine.html:39
 msgid "Status"
 msgstr "Status"
 
@@ -134,14 +132,12 @@ msgstr "Wszystkie zadania"
 #: .\templates\examination_tasks\exam_task_list.html:32
 #: .\templates\examination_tasks\exam_task_preview.html:17
 #: .\templates\examination_tasks\exam_task_preview.html:76
-#: .\templates\examination_tasks\exam_task_search_engine.html:58
 msgid "Completed"
 msgstr "Ukończone"
 
 #: .\courses\filters.py:59
 #: .\templates\examination_tasks\exam_task_preview.html:19
 #: .\templates\examination_tasks\exam_task_preview.html:81
-#: .\templates\examination_tasks\exam_task_search_engine.html:60
 msgid "Not completed"
 msgstr "Nieukończone"
 
@@ -155,7 +151,7 @@ msgid "School Level"
 msgstr "Poziom szkoły"
 
 #: .\courses\forms\book_forms.py:26 .\courses\forms\section_forms.py:12
-#: .\examination_tasks\forms\exam_forms.py:36 .\motifs\forms\motif_forms.py:17
+#: .\examination_tasks\models.py:52 .\motifs\forms\motif_forms.py:17
 #: .\motifs\models.py:25 .\quizes\filters.py:43
 #: .\templates\motifs\motif_list.html:34 .\templates\quizes\quiz_list.html:37
 #: .\videos\filters.py:42 .\videos\forms\video_forms.py:18
@@ -267,7 +263,6 @@ msgstr "Użytkownik"
 #: .\courses\models.py:163
 #: .\templates\examination_tasks\exam_task_preview.html:4
 #: .\templates\examination_tasks\exam_task_preview.html:11
-#: .\templates\examination_tasks\exam_task_search_engine.html:35
 #: .\videos\models.py:39
 msgid "Task"
 msgstr "Zadanie"
@@ -395,46 +390,59 @@ msgstr "Matura"
 msgid "Eighth Grade Exam"
 msgstr "Egzamin Ósmoklasisty"
 
-#: .\examination_tasks\forms\exam_forms.py:16
-#: .\examination_tasks\forms\exam_forms.py:35
-msgid "Exam Type"
-msgstr "Rodzaj egzaminu"
+#: .\examination_tasks\choices.py:36
+#, fuzzy
+#| msgid "Matriculation Exam"
+msgid "2002 2004 Matriculation Exam"
+msgstr "Matura"
 
-#: .\examination_tasks\forms\exam_forms.py:18
-#: .\examination_tasks\forms\exam_forms.py:37
-#: .\templates\examination_tasks\exam_list.html:38
-msgid "Year"
-msgstr "Rok"
+#: .\examination_tasks\choices.py:37
+#, fuzzy
+#| msgid "Matriculation Exam"
+msgid "2005 2009 Matriculation Exam"
+msgstr "Matura"
 
-#: .\examination_tasks\forms\exam_forms.py:19
-#: .\examination_tasks\forms\exam_forms.py:38
-#: .\templates\examination_tasks\exam_list.html:39
-msgid "Month"
-msgstr "Miesiąc"
+#: .\examination_tasks\choices.py:38
+#, fuzzy
+#| msgid "Matriculation Exam"
+msgid "2010 2014 Matriculation Exam"
+msgstr "Matura"
 
-#: .\examination_tasks\forms\exam_forms.py:20 .\motifs\models.py:38
-#: .\templates\examination_tasks\exam_list.html:13
-#: .\templates\examination_tasks\exam_list.html:40
-#: .\templates\motifs\motif_list.html:36
-#: .\templates\quizes\question_list.html:17
-msgid "Level"
-msgstr "Poziom"
+#: .\examination_tasks\choices.py:39
+#, fuzzy
+#| msgid "Matriculation Exam"
+msgid "2015 2026 Matriculation Exam"
+msgstr "Matura"
 
-#: .\examination_tasks\forms\exam_forms.py:39
-msgid "Tasks link"
-msgstr "Link do zadań"
+#: .\examination_tasks\choices.py:40
+#, fuzzy
+#| msgid "Matriculation Exam"
+msgid "2023 Matriculation Exam"
+msgstr "Matura"
 
-#: .\examination_tasks\forms\exam_forms.py:40
-msgid "Solutions link"
+#: .\examination_tasks\choices.py:41
+msgid "E8 2018 Exam"
+msgstr ""
+
+#: .\examination_tasks\choices.py:42
+msgid "2002 2019 Before E8 Exam"
+msgstr ""
+
+#: .\examination_tasks\choices.py:60
+msgid "Intro"
+msgstr ""
+
+#: .\examination_tasks\choices.py:61
+#, fuzzy
+#| msgid "In matriculation"
+msgid "Instruction"
+msgstr "Na maturze"
+
+#: .\examination_tasks\choices.py:62
+#, fuzzy
+#| msgid "Solutions link"
+msgid "Solution"
 msgstr "Link do rozwiązań"
-
-#: .\examination_tasks\forms\exam_forms.py:41
-msgid "Number of tasks"
-msgstr "Liczba zadań"
-
-#: .\examination_tasks\forms\exam_forms.py:42
-msgid "Exam level"
-msgstr "Poziom egzaminu"
 
 #: .\examination_tasks\forms\exam_tasks_forms.py:14
 msgid "Select Exam"
@@ -522,90 +530,92 @@ msgstr "Potwierdzam, że podgląd zadania jest poprawny"
 msgid "You must confirm the preview before saving."
 msgstr "Przed zapisaniem musisz zatwierdzić podgląd."
 
-#: .\examination_tasks\views\exam_task_views.py:79
+#: .\examination_tasks\models.py:48
+msgid "Exam type"
+msgstr "Rodzaj egzaminu"
+
+#: .\examination_tasks\models.py:56
+msgid "Formula"
+msgstr "Formuła"
+
+#: .\examination_tasks\models.py:68
+msgid "Exam level: basic or extended (Matriculation only)"
+msgstr "Poziom egzaminu: podstawowy lub rozszerzony (tylko Matura)"
+
+#: .\examination_tasks\views\exam_task_views.py:76
 msgid "Add New Exam Task"
 msgstr "Dodaj Nowe Zadanie Egzaminacyjne"
 
-#: .\examination_tasks\views\exam_task_views.py:116
-#: .\examination_tasks\views\exam_task_views.py:117
+#: .\examination_tasks\views\exam_task_views.py:113
+#: .\examination_tasks\views\exam_task_views.py:114
 msgid "Invalid page number format."
 msgstr "Nieprawidłowy format strony"
 
-#: .\examination_tasks\views\exam_task_views.py:131
+#: .\examination_tasks\views\exam_task_views.py:128
 msgid "Exam file not found."
 msgstr "Nie znaleziono pliku egzaminacyjnego"
 
-#: .\examination_tasks\views\exam_task_views.py:132
+#: .\examination_tasks\views\exam_task_views.py:129
 msgid "Exam file not found"
 msgstr "Nie znaleziono pliku egzaminacyjnego"
 
-#: .\examination_tasks\views\exam_task_views.py:135
+#: .\examination_tasks\views\exam_task_views.py:132
 msgid "Unexpected PDF extraction error"
 msgstr "Nieoczekiwany błąd podczas wyodrębniania zadania PDF"
 
-#: .\examination_tasks\views\exam_task_views.py:143
+#: .\examination_tasks\views\exam_task_views.py:140
 msgid "Error reading extracted PDF"
 msgstr "Błąd podczas odczytu wyekstraktowanego pliku PDF"
 
-#: .\examination_tasks\views\exam_task_views.py:165
+#: .\examination_tasks\views\exam_task_views.py:162
 msgid "Task creation cancelled. No data was saved."
 msgstr "Tworzenie zadania anulowano. Żadne dane nie zostały zapisane."
 
-#: .\examination_tasks\views\exam_task_views.py:178
+#: .\examination_tasks\views\exam_task_views.py:175
 msgid "Temporary PDF missing."
 msgstr "Brak tymczasowego pliku PDF."
 
-#: .\examination_tasks\views\exam_task_views.py:197
+#: .\examination_tasks\views\exam_task_views.py:194
 msgid "Error saving task PDF."
 msgstr "Błąd zapisu zadania PDF"
 
-#: .\examination_tasks\views\exam_task_views.py:219
+#: .\examination_tasks\views\exam_task_views.py:216
 #, python-format
 msgid "Task %(task_id)s added successfully!"
 msgstr "Zadanie %(task_id)s zostało pomyślnie dodane!"
 
-#: .\examination_tasks\views\exam_task_views.py:244
+#: .\examination_tasks\views\exam_task_views.py:241
 msgid "Invalid level"
 msgstr "Niepoprawny Poziom"
 
-#: .\examination_tasks\views\exam_task_views.py:251
+#: .\examination_tasks\views\exam_task_views.py:248
 msgid "Exam not found"
 msgstr "Nie znaleziono egzaminu"
 
-#: .\examination_tasks\views\exam_task_views.py:288
+#: .\examination_tasks\views\exam_task_views.py:285
 msgid "Incorrect PDF source type."
 msgstr "Nieprawidłowy typ źródła pliku PDF"
 
-#: .\examination_tasks\views\exam_task_views.py:304
+#: .\examination_tasks\views\exam_task_views.py:301
 #, python-format
 msgid "No PDF file for the selected type: %(kind)s"
 msgstr "Brak pliku PDF dla wybranego typu: %(kind)s"
 
-#: .\examination_tasks\views\exam_task_views.py:310
+#: .\examination_tasks\views\exam_task_views.py:307
 msgid "Unable to read the path to the PDF."
 msgstr "Nie można odczytać ścieżki do pliku PDF"
 
-#: .\examination_tasks\views\exam_task_views.py:315
+#: .\examination_tasks\views\exam_task_views.py:312
 msgid "Pages to be cut have not been defined."
 msgstr "Nie określono stron, które mają zostać wycięte."
 
-#: .\examination_tasks\views\exam_task_views.py:321
+#: .\examination_tasks\views\exam_task_views.py:318
 msgid "Unable to generate PDF file."
 msgstr "Nie można odczytać ścieżki do pliku PDF"
 
-#: .\examination_tasks\views\exam_task_views.py:332
+#: .\examination_tasks\views\exam_task_views.py:329
 msgid "An internal server error has occurred."
 msgstr "Wystąpił wewnętrzny błąd serwera."
-
-#: .\examination_tasks\views\exam_views.py:33
-#: .\templates\examination_tasks\add_exam.html:5
-#: .\templates\examination_tasks\add_exam.html:17
-msgid "Add New Exam"
-msgstr "Dodaj Nowy Egzamin"
-
-#: .\examination_tasks\views\exam_views.py:40
-msgid "Exam added successfully!"
-msgstr "Egzamin dodany pomyślnie"
 
 #: .\motifs\forms\motif_forms.py:19
 msgid "Level type"
@@ -642,6 +652,13 @@ msgstr "np. Jak rozwiązywać równania kwadratowe"
 #: .\motifs\forms\motif_forms.py:51
 msgid "Step-by-step explanation..."
 msgstr "Wyjaśnienie krok po kroku"
+
+#: .\motifs\models.py:38 .\templates\examination_tasks\exam_list.html:13
+#: .\templates\examination_tasks\exam_list.html:40
+#: .\templates\motifs\motif_list.html:36
+#: .\templates\quizes\question_list.html:17
+msgid "Level"
+msgstr "Poziom"
 
 #: .\motifs\models.py:39
 msgid "Motif level: basic or extended (Matriculation only)"
@@ -971,7 +988,6 @@ msgid "First"
 msgstr "Pierwszy"
 
 #: .\templates\courses\training_tasks_list.html:83
-#: .\templates\examination_tasks\exam_task_search_engine.html:75
 #: .\templates\quizes\question_review.html:59
 #: .\templates\quizes\quiz_solve_wizard.html:34
 #: .\templates\videos\section_video_list.html:28
@@ -983,7 +999,6 @@ msgid "of"
 msgstr "z"
 
 #: .\templates\courses\training_tasks_list.html:90
-#: .\templates\examination_tasks\exam_task_search_engine.html:81
 #: .\templates\quizes\question_review.html:63
 #: .\templates\quizes\quiz_solve_wizard.html:40
 #: .\templates\videos\add_video_wizard.html:115
@@ -1002,10 +1017,6 @@ msgstr "Nie znaleziono zadań spełniających kryteria"
 #: .\templates\courses\training_tasks_list.html:99
 msgid "Show all tasks"
 msgstr "Pokaż wszystkie zadania"
-
-#: .\templates\examination_tasks\add_exam.html:70
-msgid "Add exam"
-msgstr "Dodaj egzamin"
 
 #: .\templates\examination_tasks\add_exam_task.html:11
 msgid "Basic Data"
@@ -1107,6 +1118,14 @@ msgstr "W trakcie"
 msgid "No."
 msgstr "Lp."
 
+#: .\templates\examination_tasks\exam_list.html:38
+msgid "Year"
+msgstr "Rok"
+
+#: .\templates\examination_tasks\exam_list.html:39
+msgid "Month"
+msgstr "Miesiąc"
+
 #: .\templates\examination_tasks\exam_list.html:41
 msgid "Completion"
 msgstr "Progres"
@@ -1152,7 +1171,7 @@ msgid "last"
 msgstr "ostatni"
 
 #: .\templates\examination_tasks\exam_progress.html:4
-#: .\templates\navigation_links\examination_tasks.html:8
+#: .\templates\navigation_links\examination_tasks.html:7
 msgid "My Progress"
 msgstr "Postępy"
 
@@ -1161,7 +1180,6 @@ msgid "My Exam Progress"
 msgstr "Mój postęp w egzaminie"
 
 #: .\templates\examination_tasks\exam_progress.html:14
-
 msgid "tasks completed"
 msgstr "Ukończone Zadania"
 
@@ -1235,45 +1253,6 @@ msgstr "Otwórz odpowiedź w nowej karcie"
 msgid "Open PDF in a new tab"
 msgstr "Otwórz plik PDF w nowej karcie"
 
-#: .\templates\examination_tasks\exam_task_search_engine.html:4
-#: .\templates\examination_tasks\exam_task_search_engine.html:8
-#: .\templates\navigation_links\examination_tasks.html:4
-msgid "Examination Tasks"
-msgstr "Zadania Egzaminacyjne"
-
-#: .\templates\examination_tasks\exam_task_search_engine.html:10
-msgid "Filter tasks"
-msgstr "Filtruj Zadania"
-
-#: .\templates\examination_tasks\exam_task_search_engine.html:24
-#: .\templates\motifs\motif_list.html:14
-msgid "Filter"
-msgstr "Filtr"
-
-#: .\templates\examination_tasks\exam_task_search_engine.html:25
-#: .\templates\motifs\motif_list.html:15
-#: .\templates\videos\section_video_list.html:12
-#: .\templates\videos\video_list.html:33
-msgid "Clear"
-msgstr "Wyczyść"
-
-#: .\templates\examination_tasks\exam_task_search_engine.html:37
-msgid "Topic"
-msgstr "Temat"
-
-#: .\templates\examination_tasks\exam_task_search_engine.html:38
-msgid "Year/Month"
-msgstr "Rok/Miesiąc"
-
-#: .\templates\examination_tasks\exam_task_search_engine.html:66
-msgid "No tasks match your criteria."
-msgstr "Żadne zadanie nie spełnia twoich kryteriów."
-
-#: .\templates\examination_tasks\exam_task_search_engine.html:78
-#, python-format
-msgid "Page %(page_obj.number)s of %(page_obj.paginator.num_pages)s"
-msgstr "Strona %(page_obj.number)s z %(page_obj.paginator.num_pages)s"
-
 #: .\templates\motifs\add_motif.html:5 .\templates\motifs\add_motif.html:11
 msgid "Add New Motif"
 msgstr "Dodaj Nowy Motyw"
@@ -1299,6 +1278,16 @@ msgstr "Tak, usuń"
 #: .\templates\navigation_links\motifs.html:6
 msgid "Motifs List"
 msgstr "Lista Motywów"
+
+#: .\templates\motifs\motif_list.html:14
+msgid "Filter"
+msgstr "Filtr"
+
+#: .\templates\motifs\motif_list.html:15
+#: .\templates\videos\section_video_list.html:12
+#: .\templates\videos\video_list.html:33
+msgid "Clear"
+msgstr "Wyczyść"
 
 #: .\templates\motifs\motif_list.html:37
 msgid "Content"
@@ -1342,15 +1331,11 @@ msgstr "Lista Zadań Treningowych"
 msgid "Add Training Task"
 msgstr "Dodaj Zadanie Treningowe"
 
-#: .\templates\navigation_links\examination_tasks.html:7
-msgid "Task Search Engine"
-msgstr "Silnik do szukania zadań"
+#: .\templates\navigation_links\examination_tasks.html:4
+msgid "Examination Tasks"
+msgstr "Zadania Egzaminacyjne"
 
-#: .\templates\navigation_links\examination_tasks.html:10
-msgid "Add Exam"
-msgstr "Dodaj Egzamin"
-
-#: .\templates\navigation_links\examination_tasks.html:11
+#: .\templates\navigation_links\examination_tasks.html:9
 msgid "Add Exam Task"
 msgstr "Dodaj Zadanie Egzaminacyjne"
 
@@ -1673,7 +1658,6 @@ msgid "Solve Quiz"
 msgstr "Rozwiąż Quiz"
 
 #: .\templates\quizes\quiz_solve_wizard.html:28
-
 msgid "Previous 10 questions"
 msgstr "Wcześniejsze 10 pytań"
 
@@ -1994,3 +1978,43 @@ msgstr "Niepoprawny timestamp. Sprawdź swoje zmiany."
 #, python-format
 msgid "Movie '%(title)s' added successfully!"
 msgstr "Nagranie '%(title)s' zostało dodane pomyślnie!"
+
+#~ msgid "Tasks link"
+#~ msgstr "Link do zadań"
+
+#~ msgid "Number of tasks"
+#~ msgstr "Liczba zadań"
+
+#~ msgid "Exam level"
+#~ msgstr "Poziom egzaminu"
+
+#~ msgid "Add New Exam"
+#~ msgstr "Dodaj Nowy Egzamin"
+
+#~ msgid "Exam added successfully!"
+#~ msgstr "Egzamin dodany pomyślnie"
+
+#~ msgid "Add exam"
+#~ msgstr "Dodaj egzamin"
+
+#~ msgid "Filter tasks"
+#~ msgstr "Filtruj Zadania"
+
+#~ msgid "Topic"
+#~ msgstr "Temat"
+
+#~ msgid "Year/Month"
+#~ msgstr "Rok/Miesiąc"
+
+#~ msgid "No tasks match your criteria."
+#~ msgstr "Żadne zadanie nie spełnia twoich kryteriów."
+
+#, python-format
+#~ msgid "Page %(page_obj.number)s of %(page_obj.paginator.num_pages)s"
+#~ msgstr "Strona %(page_obj.number)s z %(page_obj.paginator.num_pages)s"
+
+#~ msgid "Task Search Engine"
+#~ msgstr "Silnik do szukania zadań"
+
+#~ msgid "Add Exam"
+#~ msgstr "Dodaj Egzamin"
