@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TutorApp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-29 11:24+0100\n"
+"POT-Creation-Date: 2026-10-29 11:31+0100\n"
 "PO-Revision-Date: 2025-06-14 23:37+0200\n"
 "Last-Translator: ChatGPT\n"
 "Language-Team: Polish <pl@translations>\n"
@@ -256,7 +256,8 @@ msgstr "Zadanie z książki wymaga podania książki"
 msgid "Book task requires a page number."
 msgstr "Zadanie z ksiązki wymaga podania numeru strony"
 
-#: .\courses\models.py:158 .\users\models.py:24
+#: .\courses\models.py:158 .\examination_tasks\models.py:337
+#: .\users\models.py:24
 msgid "User"
 msgstr "Użytkownik"
 
@@ -572,55 +573,66 @@ msgstr "Strona początkowa rozwiązania zadania egzaminacyjnego"
 msgid "Exam task solution end page"
 msgstr "Ostatnia strona rozwiązania zadania egzaminacyjnego"
 
-#: .\examination_tasks\models.py:200
+#: .\examination_tasks\models.py:201
 msgid "Exam task number already exists in this exam."
 msgstr "Numer zadania egzaminacyjnego już występuje w tym egzaminie."
 
-#: .\examination_tasks\models.py:233
+#: .\examination_tasks\models.py:235
 msgid "Exam Task"
 msgstr "Zadanie egzaminacyjne"
 
-#: .\examination_tasks\models.py:234
+#: .\examination_tasks\models.py:236
 msgid "Exam Tasks"
 msgstr "Zadania egzaminacyjne"
 
-#: .\examination_tasks\models.py:258
+#: .\examination_tasks\models.py:260
 msgid "Subnumber"
 msgstr "Podnumer"
 
-#: .\examination_tasks\models.py:262
+#: .\examination_tasks\models.py:265
 msgid ""
 "The extracted content of the instruction of the  sub task from the PDF file."
-msgstr ""
-"Treść instrukcji dotyczącej podzadania, wyodrębniona z pliku PDF."
+msgstr "Treść instrukcji dotyczącej podzadania, wyodrębniona z pliku PDF."
 
-#: .\examination_tasks\models.py:267
+#: .\examination_tasks\models.py:271
 msgid "Subtask instruction screen"
 msgstr ""
 
-#: .\examination_tasks\models.py:274
+#: .\examination_tasks\models.py:278
 msgid "Subtask solution screen"
 msgstr "Ekran instrukcji dotyczącej podzadania"
 
-#: .\examination_tasks\models.py:282
+#: .\examination_tasks\models.py:286
 msgid "Topics"
 msgstr "Tematy"
 
-#: .\examination_tasks\models.py:291
+#: .\examination_tasks\models.py:295
 msgid "Explanation timestamp"
 msgstr "Timestamp z wyjaśnieniem"
 
-#: .\examination_tasks\models.py:306
+#: .\examination_tasks\models.py:311
 msgid "Exam sub task number already exists in this task."
 msgstr "Numer podzadania egzaminacyjnego już istnieje w tym zadaniu."
 
-#: .\examination_tasks\models.py:316
+#: .\examination_tasks\models.py:322 .\examination_tasks\models.py:345
 msgid "Exam Subtask"
 msgstr "Podzadanie egzaminacyjne"
 
-#: .\examination_tasks\models.py:317
+#: .\examination_tasks\models.py:323
 msgid "Exam Subtasks"
 msgstr "Podzadania egzaminacyjne"
+
+#: .\examination_tasks\models.py:357
+msgid "User already finished this subtask"
+msgstr "Użytkownik już wykonał to podzadanie"
+
+#: .\examination_tasks\models.py:361
+msgid "User Exam Subtask Completion"
+msgstr "Wykonanie podzadań egzaminu użytkownika"
+
+#: .\examination_tasks\models.py:362
+msgid "User Exam Subtask Completions"
+msgstr "Liczba wykonanych podzadań w ramach egzaminu użytkownika"
 
 #: .\examination_tasks\views\exam_task_views.py:76
 msgid "Add New Exam Task"
