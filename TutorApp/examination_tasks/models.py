@@ -334,7 +334,7 @@ class UserExamSubtaskCompletion(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        verbose_name="User",
+        verbose_name=_("User"),
         related_name="exam_subtask_completions",
     )
 
@@ -342,7 +342,7 @@ class UserExamSubtaskCompletion(models.Model):
         ExamSubtask,
         on_delete=models.CASCADE,
         related_name="exam_subtask_completions",
-        verbose_name="Exam Subtask",
+        verbose_name=_("Exam Subtask"),
     )
 
     completed_at = models.DateTimeField(
@@ -354,12 +354,12 @@ class UserExamSubtaskCompletion(models.Model):
             models.UniqueConstraint(
                 fields=["user", "exam_subtask"],
                 name="user_exam_subtask_completion_unique_user_exam_subtask",
-                violation_error_message="User already finished this subtask",
+                violation_error_message=_("User already finished this subtask"),
             )
         ]
 
-        verbose_name = "User Exam Subtask Completion"
-        verbose_name_plural = "User Exam Subtask Completions"
+        verbose_name = _("User Exam Subtask Completion")
+        verbose_name_plural = _("User Exam Subtask Completions")
 
     def __str__(self) -> str:
         return f"{self.exam_subtask} - {self.user}"
