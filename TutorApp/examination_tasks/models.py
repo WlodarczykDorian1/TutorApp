@@ -1,5 +1,3 @@
-import os
-
 from courses.choices import SubjectChoices
 from courses.models import Topic
 from django.conf import settings
@@ -121,18 +119,6 @@ class Exam(models.Model):
             )
 
         return f"{subject_display} {formula_display} " f"{self.year} {month_display}"
-
-
-def exam_task_upload_path(instance, filename):
-    exam = instance.exam
-    return os.path.join(
-        "exam_tasks",
-        str(exam.get_subject_display()),
-        str(exam.exam_type),
-        str(exam.year),
-        str(exam.month),
-        f"zadanie_{instance.number}.pdf",
-    )
 
 
 class ExamTask(models.Model):
