@@ -21,10 +21,10 @@ MONTH_CHOICES = [
     (12, _("December")),
 ]
 
-LEVEL_CHOICES = [
-    (1, _("Basic")),
-    (2, _("Extended")),
-]
+
+class LevelTypeChoices(models.IntegerChoices):
+    BASIC = 1, _("Basic")
+    EXTENDED = 2, _("Extended")
 
 
 class ExamTypeChoices(models.IntegerChoices):
