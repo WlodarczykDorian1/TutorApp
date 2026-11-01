@@ -28,7 +28,7 @@ class GradeChoices(models.IntegerChoices):
 
 
 class SubjectChoices(models.IntegerChoices):
-    MATH = 1, _("Mathematics")
+    MATHEMATICS = 1, _("Mathematics")
     PHYSICS = 2, _("Physics")
 
 
