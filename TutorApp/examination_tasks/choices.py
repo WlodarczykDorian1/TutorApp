@@ -6,20 +6,20 @@ from django.utils.translation import gettext_lazy as _
 current_year = datetime.now().year
 YEAR_CHOICES = [(y, str(y)) for y in range(2002, current_year + 1)]
 
-MONTH_CHOICES = [
-    (1, _("January")),
-    (2, _("February")),
-    (3, _("March")),
-    (4, _("April")),
-    (5, _("May")),
-    (6, _("June")),
-    (7, _("July")),
-    (8, _("August")),
-    (9, _("September")),
-    (10, _("October")),
-    (11, _("November")),
-    (12, _("December")),
-]
+
+class MonthChoices(models.IntegerChoices):
+    JANUARY = 1, _("January")
+    FEBRUARY = 2, _("February")
+    MARCH = 3, _("March")
+    APRIL = 4, _("April")
+    MAY = 5, _("May")
+    JUNE = 6, _("June")
+    JULY = 7, _("July")
+    AUGUST = 8, _("August")
+    SEPTEMBER = 9, _("September")
+    OCTOBER = 10, _("October")
+    NOVEMBER = 11, _("November")
+    DECEMBER = 12, _("December")
 
 
 class LevelTypeChoices(models.IntegerChoices):
