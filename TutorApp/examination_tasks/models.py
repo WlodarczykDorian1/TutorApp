@@ -8,14 +8,15 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from examination_tasks.choices import (
     E8_EXAM_FORMULAS,
-    LEVEL_CHOICES,
     MATRICULATION_EXAM_FORMULAS,
-    MONTH_CHOICES,
     YEAR_CHOICES,
     ExamTypeChoices,
     FormulaChoices,
     FragmentTypeChoices,
+    LevelTypeChoices,
+    MonthChoices,
 )
+from examination_tasks.upload_paths import ExamUploadPath
 
 
 class Exam(models.Model):
@@ -34,7 +35,7 @@ class Exam(models.Model):
             E8 also contains EXAM_BEFORE_E8_2002_2019,
             because before E8 there were lower secondary schools.
         year: Year of the exam, a value from YEAR_CHOICES.
-        month: Month of the exam, a value from MONTH_CHOICES.
+        month: Month of the exam, a value from MonthChoices.
         tasks_file: Pdf file containing exam tasks.
         solutions_file: Pdf file containing exam tasks solutions.
         level_type: Level of the exam (basic or extended,
@@ -55,13 +56,13 @@ class Exam(models.Model):
         verbose_name=_("Formula"),
     )
     year = models.IntegerField(choices=YEAR_CHOICES)
-    month = models.IntegerField(choices=MONTH_CHOICES)
-    tasks_file = models.FileField(upload_to="exam_pdfs/")
+    month = models.IntegerField(choices=MonthChoices.choices)
+    tasks_file = models.FileField(upload_to=ExamUploadPath("Tasks"))
     solutions_file = models.FileField(
-        upload_to="exam_answers_pdfs/",
+        upload_to=ExamUploadPath("Solutions"),
     )
     level_type = models.IntegerField(
-        choices=LEVEL_CHOICES,
+        choices=LevelTypeChoices.choices,
         null=True,
         blank=True,
         help_text=_("Exam level: basic or extended (Matriculation only)"),
