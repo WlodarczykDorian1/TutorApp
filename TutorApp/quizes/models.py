@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from examination_tasks import choices
+from examination_tasks.choices import LevelTypeChoices
 
 SECONDS_PER_QUESTION: int = 15
 
@@ -109,7 +109,7 @@ class Question(models.Model):
         verbose_name="Quiz",
     )
     level_type = models.IntegerField(
-        choices=choices.LEVEL_CHOICES,
+        choices=LevelTypeChoices,
         null=True,
         blank=True,
         help_text="Level of question. Can be Basic or Extended",
