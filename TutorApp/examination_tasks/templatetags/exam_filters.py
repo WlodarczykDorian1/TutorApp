@@ -1,5 +1,5 @@
 from django import template
-from examination_tasks.choices import MONTH_CHOICES
+from examination_tasks.choices import MonthChoices
 
 from ..models import Exam
 
@@ -8,7 +8,7 @@ register = template.Library()
 
 @register.filter
 def get_month_display(month_number):
-    return dict(MONTH_CHOICES).get(int(month_number), month_number)
+    return dict(MonthChoices).get(int(month_number), month_number)
 
 
 @register.filter
