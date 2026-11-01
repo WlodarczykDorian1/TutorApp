@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet, inlineformset_factory
 from django.utils.translation import gettext_lazy as _
-from examination_tasks.choices import LEVEL_CHOICES
+from examination_tasks.choices import LevelTypeChoices
 
 from ..models import Answer, Question
 
@@ -14,7 +14,7 @@ class QuestionForm(TypedChoiceMixin, forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["level_type"] = self._make_typed_choice(
-            LEVEL_CHOICES, _("Level Type")
+            LevelTypeChoices, _("Level Type")
         )
 
     class Meta:
