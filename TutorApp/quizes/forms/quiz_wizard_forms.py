@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from examination_tasks.choices import LEVEL_CHOICES
+from examination_tasks.choices import LevelTypeChoices
 
 from ..models import Quiz
 
@@ -32,7 +32,7 @@ class QuizStartForm(forms.Form):
     )
 
     level_type = forms.ChoiceField(
-        choices=LEVEL_CHOICES,
+        choices=LevelTypeChoices.choices,
         label=_("Level Type"),
         widget=forms.Select,
         initial=1,
