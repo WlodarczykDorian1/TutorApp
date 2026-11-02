@@ -41,8 +41,8 @@ class ExamUploadPath:
             filename: Original uploaded file name (ignored).
 
         Returns:
-            Path such as "Exams/Matriculation/Math/Extended/2024/05/Matriculation_formula_2023/Tasks.pdf"
-            or "Exams/Eighth_grade/Math/2024/05/E8_2018/Solutions.pdf"
+            Path such as "Exams/Matriculation/Mathematics/Extended/2024/05/Matriculation_formula_2023/Tasks.pdf"
+            or "Exams/Eighth_grade/Mathematics/2024/05/E8_2018/Solutions.pdf"
         """
         parts = [
             "Exams",
@@ -73,24 +73,39 @@ class ExamUploadPath:
         return isinstance(other, ExamUploadPath) and self.category == other.category
 
 
-def get_exam_attributes(instance: "Exam") -> dict[str, str]:
+def get_exam_segments(exam: "Exam") -> list[str]:
     """
-    Gets all attributes needed for the exam upload.
+    Gets all segments needed for the exam upload in the following order:
+        - exam_type
+        - subject
+        - level_type
+        - year
+        - month
+        - formula
+
+    Level_type is optional because e8 has level_type == None.
 
     Args:
-        instance: Exam whose fields determine the folder structure.
+        exam: Exam whose fields determine the folder structure.
 
     Returns:
-        dict[str, str]: Dictionary of attributes needed for the exam upload.
-
-    Raises:
-        NotImplementedError: if this method is not implemented.
+        List of segments needed for the exam upload.
+        Examples:
+            [Matriculation, Mathematics, Extended, 2024, 05, Matriculation_formula_2023]
+            [Eighth_grade, Mathematics, 2024, 05, E8_2018]
     """
-    return {
-        "exam_type": ExamTypeChoices(instance.exam_type).name.capitalize(),
-        "subject": SubjectChoices(instance.subject).name.capitalize(),
-        "level_type": LevelTypeChoices(instance.level_type).name.capitalize(),
-        "year": str(instance.year),
-        "month": f"{instance.month:02d}",
-        "formula": FormulaChoices(instance.formula).name.capitalize(),
-    }
+    segments = [
+        ExamTypeChoices(exam.exam_type).name.capitalize(),
+        SubjectChoices(exam.subject).name.capitalize(),
+    ]
+
+    if exam.level_type is not None:
+        segments.append(LevelTypeChoices(exam.level_type).name.capitalize())
+
+    segments += [
+        str(exam.year),
+        f"{exam.month:02d}",
+        FormulaChoices(exam.formula).name.capitalize(),
+    ]
+
+    return segments
