@@ -2,6 +2,7 @@ from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 
 from courses.choices import SubjectChoices
+from django.utils import timezone
 from django.utils.deconstruct import deconstructible
 from examination_tasks.choices import ExamTypeChoices, FormulaChoices, LevelTypeChoices
 
@@ -96,3 +97,13 @@ def get_exam_segments(exam: "Exam") -> list[str]:
     ]
 
     return segments
+
+
+def timestamp_segment() -> str:
+    """
+    Build a timestamp used to make file names unique between versions.
+
+    Returns:
+         UTC timestamp such as "20261102T153000".
+    """
+    return timezone.now().strftime("%Y%m%dT%H%M%S")
