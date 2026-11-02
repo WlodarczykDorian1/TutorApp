@@ -44,20 +44,7 @@ class ExamUploadPath:
             Path such as "Exams/Matriculation/Mathematics/Extended/2024/05/Matriculation_formula_2023/Tasks.pdf"
             or "Exams/Eighth_grade/Mathematics/2024/05/E8_2018/Solutions.pdf"
         """
-        parts = [
-            "Exams",
-            ExamTypeChoices(instance.exam_type).name.capitalize(),
-            SubjectChoices(instance.subject).name.capitalize(),
-        ]
-
-        if instance.level_type is not None:
-            parts.append(LevelTypeChoices(instance.level_type).name.capitalize())
-
-        parts.append(str(instance.year))
-        parts.append(f"{instance.month:02d}")
-        parts.append(FormulaChoices(instance.formula).name.capitalize())
-        category = self.category + ".pdf"
-        parts.append(category)
+        parts = ["Exams", *get_exam_segments(instance), self.category + ".pdf"]
         return str(PurePosixPath(*parts))
 
     def __eq__(self, other: object) -> bool:
