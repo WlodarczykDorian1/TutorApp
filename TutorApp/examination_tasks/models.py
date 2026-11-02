@@ -16,7 +16,11 @@ from examination_tasks.choices import (
     LevelTypeChoices,
     MonthChoices,
 )
-from examination_tasks.upload_paths import ExamUploadPath
+from examination_tasks.upload_paths import (
+    ExamSubtaskScreensUploadPath,
+    ExamTaskIntroScreenUploadPath,
+    ExamUploadPath,
+)
 
 
 class Exam(models.Model):
@@ -156,7 +160,7 @@ class ExamTask(models.Model):
         help_text=_("The extracted content of the intro task from the PDF file."),
     )
     intro_screen = models.ImageField(
-        upload_to="examtask/images",
+        upload_to=ExamTaskIntroScreenUploadPath,
         verbose_name=_("Task intro screen"),
         blank=True,
         editable=False,
@@ -276,14 +280,14 @@ class ExamSubtask(models.Model):
     )
 
     instruction_screen = models.ImageField(
-        upload_to="examtask/images",
+        upload_to=ExamSubtaskScreensUploadPath("Instruction"),
         verbose_name=_("Subtask instruction screen"),
         blank=True,
         editable=False,
     )
 
     solution_screen = models.ImageField(
-        upload_to="examtask/images",
+        upload_to=ExamSubtaskScreensUploadPath("Solution"),
         verbose_name=_("Subtask solution screen"),
         blank=True,
         editable=False,
