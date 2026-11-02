@@ -7,7 +7,7 @@ from django.utils.deconstruct import deconstructible
 from examination_tasks.choices import ExamTypeChoices, FormulaChoices, LevelTypeChoices
 
 if TYPE_CHECKING:
-    from examination_tasks.models import Exam
+    from examination_tasks.models import Exam, ExamTask
 
 
 @deconstructible
@@ -107,3 +107,42 @@ def timestamp_segment() -> str:
          UTC timestamp such as "20261102T153000".
     """
     return timezone.now().strftime("%Y%m%dT%H%M%S")
+
+
+@deconstructible
+class ExamTaskIntroScreenUploadPath:
+    """
+    Callable building storage paths for task intro_screen.
+    """
+
+    def __call__(self, instance: "ExamTask", filename: str) -> str:
+        """
+        Build the relative storage path.
+
+        Args:
+            instance: Exam task owning the screen.
+            filename: Original uploaded file name (ignored).
+
+        Returns:
+            Path such as "ExamScreens/Matriculation/Mathematics/Extended/2026/05/Matriculation_formula_2023/12/Intro_20261102T160000.png"
+            or "ExamScreens/Eighth_grade/Mathematics/2026/05/E8_2018/03/Intro_20180602T160000.png"
+        """
+        parts = [
+            "ExamScreens",
+            *get_exam_segments(instance.exam),
+            f"{instance.number:02d}",
+            f"Intro_{timestamp_segment()}.png",
+        ]
+        return str(PurePosixPath(*parts))
+
+    def __eq__(self, other: object) -> bool:
+        """
+        Compare builders by configuration.
+
+        Args:
+            other: Object to compare.
+
+        Returns:
+            True if other is an ExamTaskIntroScreenUploadPath.
+        """
+        return isinstance(other, ExamTaskIntroScreenUploadPath)
