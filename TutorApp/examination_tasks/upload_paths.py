@@ -41,13 +41,12 @@ class ExamUploadPath:
             filename: Original uploaded file name (ignored).
 
         Returns:
-            Path such as "Exams/Matriculation/Tasks/Math/Extended/2024/05/Matriculation_formula_2023.pdf"
-            or "Exams/Eighth_grade/Solutions/Math/2024/05/E8_2018.pdf"
+            Path such as "Exams/Matriculation/Math/Extended/2024/05/Matriculation_formula_2023/Tasks.pdf"
+            or "Exams/Eighth_grade/Math/2024/05/E8_2018/Solutions.pdf"
         """
         parts = [
             "Exams",
             ExamTypeChoices(instance.exam_type).name.capitalize(),
-            self.category,
             SubjectChoices(instance.subject).name.capitalize(),
         ]
 
@@ -56,8 +55,9 @@ class ExamUploadPath:
 
         parts.append(str(instance.year))
         parts.append(f"{instance.month:02d}")
-        formula = FormulaChoices(instance.formula).name.capitalize() + ".pdf"
-        parts.append(formula)
+        parts.append(FormulaChoices(instance.formula).name.capitalize())
+        category = self.category + ".pdf"
+        parts.append(category)
         return str(PurePosixPath(*parts))
 
     def __eq__(self, other: object) -> bool:
@@ -71,3 +71,26 @@ class ExamUploadPath:
             True if other is an ExamUploadPath with the same category.
         """
         return isinstance(other, ExamUploadPath) and self.category == other.category
+
+
+def get_exam_attributes(instance: "Exam") -> dict[str, str]:
+    """
+    Gets all attributes needed for the exam upload.
+
+    Args:
+        instance: Exam whose fields determine the folder structure.
+
+    Returns:
+        dict[str, str]: Dictionary of attributes needed for the exam upload.
+
+    Raises:
+        NotImplementedError: if this method is not implemented.
+    """
+    return {
+        "exam_type": ExamTypeChoices(instance.exam_type).name.capitalize(),
+        "subject": SubjectChoices(instance.subject).name.capitalize(),
+        "level_type": LevelTypeChoices(instance.level_type).name.capitalize(),
+        "year": str(instance.year),
+        "month": f"{instance.month:02d}",
+        "formula": FormulaChoices(instance.formula).name.capitalize(),
+    }
