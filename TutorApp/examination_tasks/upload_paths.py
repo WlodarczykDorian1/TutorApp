@@ -7,7 +7,7 @@ from django.utils.deconstruct import deconstructible
 from examination_tasks.choices import ExamTypeChoices, FormulaChoices, LevelTypeChoices
 
 if TYPE_CHECKING:
-    from examination_tasks.models import Exam, ExamTask
+    from examination_tasks.models import Exam, ExamSubtask, ExamTask
 
 
 @deconstructible
@@ -146,3 +146,65 @@ class ExamTaskIntroScreenUploadPath:
             True if other is an ExamTaskIntroScreenUploadPath.
         """
         return isinstance(other, ExamTaskIntroScreenUploadPath)
+
+
+@deconstructible
+class ExamSubtaskScreensUploadPath:
+    """
+    Callable building storage paths for subtask screens.
+
+    Attributes:
+        category: Subname distinguishing file types, e.g. "Instruction", "Solution".
+    """
+
+    def __init__(self, category: str) -> None:
+        """
+        Initialize the path builder.
+
+        Args:
+            category: Subname for this file type.
+        """
+        self.category = category
+
+    def __call__(self, instance: "ExamSubtask", filename: str) -> str:
+        """
+        Build storage paths for subtask screens.
+
+        Args:
+            instance: Exam subtask owning the screen.
+            filename: Original uploaded file name (ignored).
+
+        Returns:
+            Path such as "ExamScreens/Matriculation/Mathematics/Extended/2026/05/Matriculation_formula_2023/12/Instruction_01_20261102T160000.png"
+            or "ExamScreens/Eighth_grade/Mathematics/2026/05/E8_2018/03/Solution_20261102T160000.png"
+        """
+        file_name_parts = [self.category]
+
+        if instance.subnumber is not None:
+            file_name_parts.append(f"{instance.subnumber:02d}")
+
+        file_name_parts.append(timestamp_segment())
+        file_name = "_".join(file_name_parts) + ".png"
+
+        parts = [
+            "ExamScreens",
+            *get_exam_segments(instance.exam_task.exam),
+            f"{instance.exam_task.number:02d}",
+            file_name,
+        ]
+        return str(PurePosixPath(*parts))
+
+    def __eq__(self, other: object) -> bool:
+        """
+        Compare builders by configuration.
+
+        Args:
+            other: Object to compare.
+
+        Returns:
+            True if other is an ExamSubtaskScreensUploadPath with the same category.
+        """
+        return (
+            isinstance(other, ExamSubtaskScreensUploadPath)
+            and self.category == other.category
+        )
