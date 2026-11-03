@@ -1,7 +1,11 @@
 from functools import partial
+from typing import Any
 
 from django.db import transaction
 from django.db.models.fields.files import FieldFile
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+from examination_tasks.models import ExamSubtask
 
 
 def register_file_deletion(field_file: FieldFile) -> None:
@@ -22,3 +26,24 @@ def register_file_deletion(field_file: FieldFile) -> None:
     transaction.on_commit(
         partial(storage.delete, name),
     )
+
+
+@receiver(post_delete, sender=ExamSubtask)
+def delete_subtask_screens(
+    sender: type[ExamSubtask],
+    instance: ExamSubtask,
+    **kwargs: Any,
+) -> None:
+    """
+    Delete exam subtask screens from the storage after the subtask is deleted.
+
+    Works for single deletes, queryset deletes and cascades,
+    because post_delete is sent for every deleted object.
+
+    Args:
+        sender: Model class that sent the signal.
+        instance: Subtask that has just been deleted.
+        **kwargs: Extra signal arguments (unused).
+    """
+    register_file_deletion(instance.instruction_screen)
+    register_file_deletion(instance.solution_screen)
