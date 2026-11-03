@@ -5,7 +5,7 @@ from django.db import transaction
 from django.db.models.fields.files import FieldFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from examination_tasks.models import ExamSubtask
+from examination_tasks.models import Exam, ExamSubtask
 
 
 def register_file_deletion(field_file: FieldFile) -> None:
@@ -47,3 +47,24 @@ def delete_subtask_screens(
     """
     register_file_deletion(instance.instruction_screen)
     register_file_deletion(instance.solution_screen)
+
+
+@receiver(post_delete, sender=Exam)
+def delete_exam_files(
+    sender: type[Exam],
+    instance: Exam,
+    **kwargs: Any,
+) -> None:
+    """
+    Delete exam files from the storage after the exam is deleted.
+
+    Works for single deletes, queryset deletes and cascades,
+    because post_delete is sent for every deleted object.
+
+    Args:
+        sender: Model class that sent the signal.
+        instance: Exam that has just been deleted.
+        **kwargs: Extra signal arguments (unused).
+    """
+    register_file_deletion(instance.tasks_file)
+    register_file_deletion(instance.solutions_file)
