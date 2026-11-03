@@ -3,7 +3,7 @@ from typing import Any
 
 from django.core.files.storage import Storage
 from django.db import transaction
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 from examination_tasks.models import Exam, ExamSubtask, ExamTask
 
@@ -92,3 +92,37 @@ def delete_subtask_screens(
     register_file_deletion(
         instance.solution_screen.storage, instance.solution_screen.name
     )
+
+
+@receiver(pre_save, sender=ExamSubtask)
+def delete_replaced_exam_subtask_screens(
+    sender: type[ExamSubtask],
+    instance: ExamSubtask,
+    **kwargs: Any,
+) -> None:
+    """
+    Delete old screens when they are replaced with new ones.
+
+    Args:
+        sender: Model class that sent the signal.
+        instance: Subtask about to be saved.
+        **kwargs: Extra signal arguments (unused).
+    """
+    if instance._state.adding:
+        return
+
+    old = (
+        sender.objects.filter(pk=instance.pk)
+        .values("instruction_screen", "solution_screen")
+        .first()
+    )
+
+    if old is None:
+        return
+
+    for field_name in old:
+        new_file = getattr(instance, field_name)
+        old_name = old[field_name]
+
+        if old_name != new_file.name:
+            register_file_deletion(new_file.storage, old_name)
