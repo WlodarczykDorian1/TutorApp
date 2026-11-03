@@ -1,27 +1,25 @@
 from functools import partial
 from typing import Any
 
+from django.core.files.storage import Storage
 from django.db import transaction
-from django.db.models.fields.files import FieldFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from examination_tasks.models import Exam, ExamSubtask, ExamTask
 
 
-def register_file_deletion(field_file: FieldFile) -> None:
+def register_file_deletion(storage: Storage, name: str) -> None:
     """
     Register a file deletion after the transaction commits.
 
-    Does nothing when no file has been assigned to the field.
+    Does nothing when the path is empty.
 
     Args:
-        field_file: File from the model field that is to be deleted.
+        storage: File storage object.
+        name: Path of the file to delete, relative to the storage root.
     """
-    if not field_file.name:
+    if not name:
         return
-
-    storage = field_file.storage
-    name = field_file.name
 
     transaction.on_commit(
         partial(storage.delete, name),
