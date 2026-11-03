@@ -43,8 +43,10 @@ def delete_exam_files(
         instance: Exam that has just been deleted.
         **kwargs: Extra signal arguments (unused).
     """
-    register_file_deletion(instance.tasks_file)
-    register_file_deletion(instance.solutions_file)
+    register_file_deletion(instance.tasks_file.storage, instance.tasks_file.name)
+    register_file_deletion(
+        instance.solutions_file.storage, instance.solutions_file.name
+    )
 
 
 @receiver(post_delete, sender=ExamTask)
@@ -64,7 +66,7 @@ def delete_exam_task_screen(
         instance: Exam task that has just been deleted.
         **kwargs: Extra signal arguments (unused).
     """
-    register_file_deletion(instance.intro_screen)
+    register_file_deletion(instance.intro_screen.storage, instance.intro_screen.name)
 
 
 @receiver(post_delete, sender=ExamSubtask)
@@ -84,5 +86,9 @@ def delete_subtask_screens(
         instance: Subtask that has just been deleted.
         **kwargs: Extra signal arguments (unused).
     """
-    register_file_deletion(instance.instruction_screen)
-    register_file_deletion(instance.solution_screen)
+    register_file_deletion(
+        instance.instruction_screen.storage, instance.instruction_screen.name
+    )
+    register_file_deletion(
+        instance.solution_screen.storage, instance.solution_screen.name
+    )
