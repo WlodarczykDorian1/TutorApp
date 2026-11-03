@@ -5,7 +5,7 @@ from django.db import transaction
 from django.db.models.fields.files import FieldFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from examination_tasks.models import Exam, ExamSubtask
+from examination_tasks.models import Exam, ExamSubtask, ExamTask
 
 
 def register_file_deletion(field_file: FieldFile) -> None:
@@ -28,27 +28,6 @@ def register_file_deletion(field_file: FieldFile) -> None:
     )
 
 
-@receiver(post_delete, sender=ExamSubtask)
-def delete_subtask_screens(
-    sender: type[ExamSubtask],
-    instance: ExamSubtask,
-    **kwargs: Any,
-) -> None:
-    """
-    Delete exam subtask screens from the storage after the subtask is deleted.
-
-    Works for single deletes, queryset deletes and cascades,
-    because post_delete is sent for every deleted object.
-
-    Args:
-        sender: Model class that sent the signal.
-        instance: Subtask that has just been deleted.
-        **kwargs: Extra signal arguments (unused).
-    """
-    register_file_deletion(instance.instruction_screen)
-    register_file_deletion(instance.solution_screen)
-
-
 @receiver(post_delete, sender=Exam)
 def delete_exam_files(
     sender: type[Exam],
@@ -68,3 +47,44 @@ def delete_exam_files(
     """
     register_file_deletion(instance.tasks_file)
     register_file_deletion(instance.solutions_file)
+
+
+@receiver(post_delete, sender=ExamTask)
+def delete_exam_task_screen(
+    sender: type[ExamTask],
+    instance: ExamTask,
+    **kwargs: Any,
+) -> None:
+    """
+    Delete exam task screen from the storage after the exam task is deleted.
+
+    Works for single deletes, queryset deletes and cascades,
+    because post_delete is sent for every deleted object.
+
+    Args:
+        sender: Model class that sent the signal.
+        instance: Exam task that has just been deleted.
+        **kwargs: Extra signal arguments (unused).
+    """
+    register_file_deletion(instance.intro_screen)
+
+
+@receiver(post_delete, sender=ExamSubtask)
+def delete_subtask_screens(
+    sender: type[ExamSubtask],
+    instance: ExamSubtask,
+    **kwargs: Any,
+) -> None:
+    """
+    Delete exam subtask screens from the storage after the subtask is deleted.
+
+    Works for single deletes, queryset deletes and cascades,
+    because post_delete is sent for every deleted object.
+
+    Args:
+        sender: Model class that sent the signal.
+        instance: Subtask that has just been deleted.
+        **kwargs: Extra signal arguments (unused).
+    """
+    register_file_deletion(instance.instruction_screen)
+    register_file_deletion(instance.solution_screen)
