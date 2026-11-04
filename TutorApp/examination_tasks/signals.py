@@ -2,7 +2,7 @@ from functools import partial
 from typing import Any
 
 from django.core.files.storage import Storage
-from django.db import transaction
+from django.db import models, transaction
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 from examination_tasks.models import Exam, ExamSubtask, ExamTask
@@ -94,27 +94,30 @@ def delete_subtask_screens(
     )
 
 
-@receiver(pre_save, sender=ExamSubtask)
-def delete_replaced_exam_subtask_screens(
-    sender: type[ExamSubtask],
-    instance: ExamSubtask,
-    **kwargs: Any,
+def delete_replaced_files(
+    sender: type[models.Model],
+    instance: models.Model,
+    file_field_names: list[str],
+    raw: bool,
 ) -> None:
     """
-    Delete old screens when they are replaced with new ones.
+    Schedule deletion of old files that are being replaced with new ones.
 
     Args:
         sender: Model class that sent the signal.
-        instance: Subtask about to be saved.
-        **kwargs: Extra signal arguments (unused).
+        instance: Model instance about to be saved.
+        file_field_names: List of file field names from model.
+        raw: True when the instance is saved as-is from a fixture (loaddata).
+            The database may be inconsistent then, so nothing is done.
     """
+    if raw:
+        return
+
     if instance._state.adding:
         return
 
     old = (
-        sender.objects.filter(pk=instance.pk)
-        .values("instruction_screen", "solution_screen")
-        .first()
+        sender._default_manager.filter(pk=instance.pk).values(*file_field_names).first()
     )
 
     if old is None:
@@ -126,3 +129,65 @@ def delete_replaced_exam_subtask_screens(
 
         if old_name != new_file.name:
             register_file_deletion(new_file.storage, old_name)
+
+
+@receiver(pre_save, sender=ExamSubtask)
+def delete_replaced_exam_subtask_screens(
+    sender: type[ExamSubtask],
+    instance: ExamSubtask,
+    raw: bool,
+    **kwargs: Any,
+) -> None:
+    """
+    Delete old screens when they are replaced with new ones.
+
+    Args:
+        sender: Model class that sent the signal.
+        instance: Subtask about to be saved.
+        raw: True when the instance is saved as-is from a fixture (loaddata).
+            The database may be inconsistent then, so nothing is done.
+        **kwargs: Extra signal arguments (unused).
+    """
+    delete_replaced_files(
+        sender, instance, ["instruction_screen", "solution_screen"], raw
+    )
+
+
+@receiver(pre_save, sender=Exam)
+def delete_replaced_exam_files(
+    sender: type[Exam],
+    instance: Exam,
+    raw: bool,
+    **kwargs: Any,
+) -> None:
+    """
+    Delete old exam and solution file when they are replaced with new ones.
+
+    Args:
+        sender: Model class that sent the signal.
+        instance: Exam about to be saved.
+        raw: True when the instance is saved as-is from a fixture (loaddata).
+            The database may be inconsistent then, so nothing is done.
+        **kwargs: Extra signal arguments (unused).
+    """
+    delete_replaced_files(sender, instance, ["tasks_file", "solutions_file"], raw)
+
+
+@receiver(pre_save, sender=ExamTask)
+def delete_replaced_exam_task_screen(
+    sender: type[ExamTask],
+    instance: ExamTask,
+    raw: bool,
+    **kwargs: Any,
+) -> None:
+    """
+    Delete old exam task intro screen when it is replaced with new one.
+
+    Args:
+        sender: Model class that sent the signal.
+        instance: Exam task about to be saved.
+        raw: True when the instance is saved as-is from a fixture (loaddata).
+            The database may be inconsistent then, so nothing is done.
+        **kwargs: Extra signal arguments (unused).
+    """
+    delete_replaced_files(sender, instance, ["intro_screen"], raw)
