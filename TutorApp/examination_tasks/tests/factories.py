@@ -6,6 +6,7 @@ from examination_tasks.choices import (
     YEAR_CHOICES,
     ExamTypeChoices,
     FormulaChoices,
+    FragmentTypeChoices,
     LevelTypeChoices,
     MonthChoices,
 )
@@ -13,6 +14,7 @@ from examination_tasks.models import (
     Exam,
     ExamSubtask,
     ExamTask,
+    ExamTaskFragment,
     UserExamSubtaskCompletion,
 )
 from users.tests.factories import UserFactory
@@ -151,3 +153,37 @@ class UserExamSubtaskCompletionFactory(factory.django.DjangoModelFactory):
 
     user = factory.SubFactory(UserFactory)
     exam_subtask = factory.SubFactory(ExamSubtaskFactory)
+
+
+class ExamTaskFragmentFactory(factory.django.DjangoModelFactory):
+    """
+    Create an INSTRUCTION ExamTaskFragment belonging to a new ExamSubtask.
+
+    Each fragment gets a unique, ascending order.
+    Page and coordinates are fixed, valid values.
+    Coordinates are fractions of page height: 0 is the top, 1 is the bottom.
+
+    Use the `intro` trait to create an INTRO fragment belonging to a new
+    ExamTask instead.
+    Use the `solution` trait to create a SOLUTION fragment.
+    """
+
+    class Meta:
+        model = ExamTaskFragment
+
+    class Params:
+        intro = factory.Trait(
+            fragment_type=FragmentTypeChoices.INTRO,
+            exam_task=factory.SubFactory(ExamTaskFactory),
+            exam_subtask=None,
+        )
+        solution = factory.Trait(
+            fragment_type=FragmentTypeChoices.SOLUTION,
+        )
+
+    fragment_type = FragmentTypeChoices.INSTRUCTION
+    exam_subtask = factory.SubFactory(ExamSubtaskFactory)
+    page = 5
+    y_start = 0.1
+    y_end = 0.7
+    order = factory.Sequence(lambda n: n + 1)
