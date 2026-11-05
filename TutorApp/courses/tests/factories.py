@@ -44,7 +44,7 @@ class SectionFactory(DjangoModelFactory):
         model = Section
 
     grade = GradeChoices.PRIMARY_7
-    subject = SubjectChoices.MATH
+    subject = SubjectChoices.MATHEMATICS
 
     name = factory.Faker(
         "random_element",
