@@ -160,7 +160,7 @@ class ExamTask(models.Model):
         help_text=_("The extracted content of the intro task from the PDF file."),
     )
     intro_screen = models.ImageField(
-        upload_to=ExamTaskIntroScreenUploadPath,
+        upload_to=ExamTaskIntroScreenUploadPath(),
         verbose_name=_("Task intro screen"),
         blank=True,
         editable=False,
