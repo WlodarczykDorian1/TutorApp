@@ -7,7 +7,7 @@ from examination_tasks.choices import (
     LevelTypeChoices,
     MonthChoices,
 )
-from examination_tasks.models import Exam, ExamTask
+from examination_tasks.models import Exam, ExamSubtask, ExamTask
 
 
 class ExamFactory(factory.django.DjangoModelFactory):
@@ -70,3 +70,33 @@ class ExamTaskFactory(factory.django.DjangoModelFactory):
 
     exam = factory.SubFactory(ExamFactory)
     number = factory.Sequence(lambda n: n + 1)
+
+
+class ExamSubtaskFactory(factory.django.DjangoModelFactory):
+    """
+    Create an ExamSubtask belonging to a new ExamTask.
+
+    By default, each subtask gets a unique, ascending subnumber
+    (do not rely on its exact value).
+    Be careful by setting subnumber to None due to IntegrityError with exam task number.
+
+    Use the `e8` trait to create a subtask belonging to an eighth grade exam task.
+    Use the `null_subnumber` trait to create the single subtask of a task
+    without sub-questions. Only one such subtask is allowed per task
+    (exam_subtask_unique_subnumber), so do not combine this trait with
+    create_batch for the same exam_task.
+    """
+
+    class Meta:
+        model = ExamSubtask
+
+    class Params:
+        e8 = factory.Trait(
+            exam_task=factory.SubFactory(ExamTaskFactory, e8=True),
+        )
+        null_subnumber = factory.Trait(
+            subnumber=None,
+        )
+
+    exam_task = factory.SubFactory(ExamTaskFactory)
+    subnumber = factory.Sequence(lambda n: n + 1)
