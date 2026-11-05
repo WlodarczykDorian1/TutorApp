@@ -1,5 +1,7 @@
 import factory
 from courses.choices import SubjectChoices
+from courses.models import Topic
+from courses.tests.factories import TopicFactory
 from examination_tasks.choices import (
     YEAR_CHOICES,
     ExamTypeChoices,
@@ -78,7 +80,12 @@ class ExamSubtaskFactory(factory.django.DjangoModelFactory):
 
     By default, each subtask gets a unique, ascending subnumber
     (do not rely on its exact value).
-    Be careful by setting subnumber to None due to IntegrityError with exam task number.
+    By default, each subtask gets a new topic from TopicFactory.
+    You can pass your own topics but empty list will get subtask without any topic.
+    Instruction_content is empty because PDF extraction is not run.
+    Instruction_screen and solution_screen are empty because no
+    ExamTaskFragment exists yet.
+
 
     Use the `e8` trait to create a subtask belonging to an eighth grade exam task.
     Use the `null_subnumber` trait to create the single subtask of a task
@@ -100,3 +107,22 @@ class ExamSubtaskFactory(factory.django.DjangoModelFactory):
 
     exam_task = factory.SubFactory(ExamTaskFactory)
     subnumber = factory.Sequence(lambda n: n + 1)
+
+    @factory.post_generation
+    def topics(self, create: bool, extracted: list[Topic] | None, **kwargs) -> None:
+        """
+        Attach topics to the exam subtask after it is saved.
+
+        Args:
+            create: True for .create(), False for .build().
+            extracted: Topics passed by the test, or None if not passed.
+            **kwargs: Extra arguments passed as topics__<name>=... (unused).
+        """
+        if not create:
+            return
+
+        if extracted is None:
+            self.topics.add(TopicFactory())
+            return
+
+        self.topics.add(*extracted)
