@@ -6,9 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 class User(AbstractUser):
 
-    school_type = models.IntegerField(
-        max_length=20, choices=SchoolLevelChoices, null=True, blank=True
-    )
+    school_type = models.IntegerField(choices=SchoolLevelChoices, null=True, blank=True)
     role = [(1, "Student"), (2, "Teacher"), (3, "Admin")]
     role_type = models.IntegerField(choices=role, default=1)
 
