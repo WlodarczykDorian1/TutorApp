@@ -9,7 +9,13 @@ from examination_tasks.choices import (
     LevelTypeChoices,
     MonthChoices,
 )
-from examination_tasks.models import Exam, ExamSubtask, ExamTask
+from examination_tasks.models import (
+    Exam,
+    ExamSubtask,
+    ExamTask,
+    UserExamSubtaskCompletion,
+)
+from users.tests.factories import UserFactory
 
 
 class ExamFactory(factory.django.DjangoModelFactory):
@@ -126,3 +132,22 @@ class ExamSubtaskFactory(factory.django.DjangoModelFactory):
             return
 
         self.topics.add(*extracted)
+
+
+class UserExamSubtaskCompletionFactory(factory.django.DjangoModelFactory):
+    """
+    Create an UserExamSubtaskCompletion belonging to a new user and a new ExamSubtask.
+
+    Pass user=... and exam_subtask=... to mark an existing subtask as completed by an existing user.
+    The pair must be unique so do not use create_batch with the same user and exam_subtask.
+
+    completed_at is set automatically by auto_now_add and cannot be overwritten
+    by passing it to the factory.
+    Use QuerySet.update() after creation if a test needs a specific date.
+    """
+
+    class Meta:
+        model = UserExamSubtaskCompletion
+
+    user = factory.SubFactory(UserFactory)
+    exam_subtask = factory.SubFactory(ExamSubtaskFactory)

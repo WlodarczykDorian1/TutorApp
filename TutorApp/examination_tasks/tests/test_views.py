@@ -6,7 +6,8 @@ from django.http import QueryDict
 from django.test import Client, RequestFactory, TestCase
 from django.urls import reverse
 
-from ...users.factories import UserFactory
+from TutorApp.users.tests.factories import UserFactory
+
 from ..factories import ExamFactory, MathMatriculationTasksFactory
 from ..models import Book, Exam, MathMatriculationTasks
 from ..services import MatriculationTaskService
