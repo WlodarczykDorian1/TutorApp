@@ -1,11 +1,13 @@
 from core.tests.base import TempMediaRootTestCase
 from django.conf import settings
-from examination_tasks.choices import ExamTypeChoices
+from examination_tasks.choices import ExamTypeChoices, FragmentTypeChoices
 from examination_tasks.models import Exam
 from examination_tasks.tests.factories import (
     ExamFactory,
     ExamSubtaskFactory,
     ExamTaskFactory,
+    ExamTaskFragmentFactory,
+    UserExamSubtaskCompletionFactory,
 )
 
 
@@ -50,3 +52,31 @@ class ExamSubtaskFactorySmokeTests(TempMediaRootTestCase):
 
         self.assertEqual(exam.exam_type, ExamTypeChoices.EIGHTH_GRADE)
         self.assertIsNone(subtask.subnumber)
+
+
+class CompletionAndFragmentFactorySmokeTests(TempMediaRootTestCase):
+    """Check UserExamSubtaskCompletionFactory and ExamTaskFragmentFactory."""
+
+    def test_completion_is_created(self) -> None:
+        completion = UserExamSubtaskCompletionFactory()
+        self.assertIn(completion.user, completion.exam_subtask.completed_by.all())
+
+    def test_default_fragment_belongs_to_subtask(self) -> None:
+        fragment = ExamTaskFragmentFactory()
+        self.assertEqual(fragment.fragment_type, FragmentTypeChoices.INSTRUCTION)
+        self.assertIsNotNone(fragment.exam_subtask)
+        self.assertIsNone(fragment.exam_task)
+
+    def test_intro_fragment_belongs_to_task(self) -> None:
+        fragment = ExamTaskFragmentFactory(intro=True)
+        self.assertIsNotNone(fragment.exam_task)
+        self.assertIsNone(fragment.exam_subtask)
+
+    def test_solution_fragment(self) -> None:
+        fragment = ExamTaskFragmentFactory(solution=True)
+        self.assertEqual(fragment.fragment_type, FragmentTypeChoices.SOLUTION)
+
+    def test_batch_for_one_subtask(self) -> None:
+        subtask = ExamSubtaskFactory()
+        ExamTaskFragmentFactory.create_batch(3, exam_subtask=subtask)
+        self.assertEqual(subtask.fragments.count(), 3)
