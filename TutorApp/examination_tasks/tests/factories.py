@@ -7,7 +7,7 @@ from examination_tasks.choices import (
     LevelTypeChoices,
     MonthChoices,
 )
-from examination_tasks.models import Exam
+from examination_tasks.models import Exam, ExamTask
 
 
 class ExamFactory(factory.django.DjangoModelFactory):
@@ -42,3 +42,31 @@ class ExamFactory(factory.django.DjangoModelFactory):
         filename="solutions.pdf",
         data=b"fake content",
     )
+
+
+class ExamTaskFactory(factory.django.DjangoModelFactory):
+    """
+    Create an ExamTask belonging to a new Exam.
+
+    The default task represents a task without sub-questions, so
+    intro_content and intro_screen are empty (its content lives in
+    ExamSubtask). Page ranges are empty because no ExamTaskFragment
+    exists yet; they are calculated from fragments, not set directly.
+
+    No ExamSubtask is created automatically. Create subtasks explicitly
+    with ExamSubtaskFactory(exam_task=...), so each test controls
+    their number and subnumbers.
+
+    Use the `e8` trait to create a task belonging to an eighth grade exam.
+    """
+
+    class Meta:
+        model = ExamTask
+
+    class Params:
+        e8 = factory.Trait(
+            exam=factory.SubFactory(ExamFactory, e8=True),
+        )
+
+    exam = factory.SubFactory(ExamFactory)
+    number = factory.Sequence(lambda n: n + 1)
