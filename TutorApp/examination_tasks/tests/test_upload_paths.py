@@ -202,6 +202,6 @@ class ExamUploadPathTests(SimpleTestCase):
         ]
 
         for field_name, expected in cases:
-            with self.subTest(field=field_name):
+            with self.subTest(field_name=field_name):
                 upload_to = Exam._meta.get_field(field_name).upload_to
                 self.assertEqual(upload_to, expected)
