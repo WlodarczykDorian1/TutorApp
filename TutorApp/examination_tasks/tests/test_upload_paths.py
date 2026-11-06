@@ -8,6 +8,7 @@ from examination_tasks.choices import (
     LevelTypeChoices,
     MonthChoices,
 )
+from examination_tasks.models import Exam
 from examination_tasks.tests.factories import ExamFactory
 from examination_tasks.upload_paths import (
     ExamSubtaskScreensUploadPath,
@@ -187,3 +188,20 @@ class ExamUploadPathTests(SimpleTestCase):
         _, args, kwargs = original.deconstruct()
         rebuilt = ExamUploadPath(*args, **kwargs)
         self.assertEqual(original, rebuilt)
+
+    def test_exam_file_fields_use_upload_path_with_category(self) -> None:
+        """
+        Configure each exam file field with an upload path for its category.
+
+        Passing the class instead of an instance to upload_to fails
+        only when a file is saved, so it is checked here.
+        """
+        cases = [
+            ("tasks_file", ExamUploadPath("Tasks")),
+            ("solutions_file", ExamUploadPath("Solutions")),
+        ]
+
+        for field_name, expected in cases:
+            with self.subTest(field=field_name):
+                upload_to = Exam._meta.get_field(field_name).upload_to
+                self.assertEqual(upload_to, expected)
