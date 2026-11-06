@@ -9,7 +9,11 @@ from examination_tasks.choices import (
     MonthChoices,
 )
 from examination_tasks.tests.factories import ExamFactory
-from examination_tasks.upload_paths import ExamUploadPath, get_exam_segments
+from examination_tasks.upload_paths import (
+    ExamSubtaskScreensUploadPath,
+    ExamUploadPath,
+    get_exam_segments,
+)
 
 
 class GetExamSegmentsTests(SimpleTestCase):
@@ -151,3 +155,23 @@ class ExamUploadPathTests(SimpleTestCase):
         Treat objects with different category as not equal.
         """
         self.assertNotEqual(ExamUploadPath("Tasks"), ExamUploadPath("Solutions"))
+
+    def test_not_equals_when_class_differs(self) -> None:
+        """
+        Treat objects with different classes as not equal.
+        """
+        self.assertNotEqual(
+            ExamUploadPath("Tasks"), ExamSubtaskScreensUploadPath("Tasks")
+        )
+
+    def test_deconstructs_import_path(self) -> None:
+        """
+        Deconstruct to the import path stored in migration files.
+
+        Existing migrations reference ExamUploadPath by this exact path.
+        Moving or renaming the class would break loading those migrations.
+        """
+        path_builder = ExamUploadPath("Tasks")
+        path, _, _ = path_builder.deconstruct()
+        expected = "examination_tasks.upload_paths.ExamUploadPath"
+        self.assertEqual(path, expected)
