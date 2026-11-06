@@ -125,7 +125,23 @@ class ExamUploadPathTests(SimpleTestCase):
             formula=FormulaChoices.MATRICULATION_FORMULA_2023,
         )
 
-        expected = "Exams/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/Tasks.pdf"
-        path_builder = ExamUploadPath("Tasks")
+        expected = "Exams/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/Exercises.pdf"
+        path_builder = ExamUploadPath("Exercises")
         result = path_builder(exam, "zadanie.txt")
         self.assertEqual(result, expected)
+
+    def test_ignores_filenames(self) -> None:
+        """
+        Return the same path for an exam file from two different filenames.
+        """
+        exam = ExamFactory.build()
+        path_builder = ExamUploadPath("Tasks")
+        result_txt = path_builder(exam, "zadanie.txt")
+        result_png = path_builder(exam, "ćwiczenie.png")
+        self.assertEqual(result_txt, result_png)
+
+    def test_equals_when_class_and_category_match(self) -> None:
+        """
+        Treat objects with the same class and category as equal.
+        """
+        self.assertEqual(ExamUploadPath("Tasks"), ExamUploadPath("Tasks"))
