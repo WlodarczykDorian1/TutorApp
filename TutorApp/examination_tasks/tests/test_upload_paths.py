@@ -145,3 +145,9 @@ class ExamUploadPathTests(SimpleTestCase):
         Treat objects with the same class and category as equal.
         """
         self.assertEqual(ExamUploadPath("Tasks"), ExamUploadPath("Tasks"))
+
+    def test_not_equals_when_categories_differs(self) -> None:
+        """
+        Treat objects with different category as not equal.
+        """
+        self.assertNotEqual(ExamUploadPath("Tasks"), ExamUploadPath("Solutions"))
