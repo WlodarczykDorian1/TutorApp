@@ -9,7 +9,7 @@ from examination_tasks.choices import (
     MonthChoices,
 )
 from examination_tasks.tests.factories import ExamFactory
-from examination_tasks.upload_paths import get_exam_segments
+from examination_tasks.upload_paths import ExamUploadPath, get_exam_segments
 
 
 class GetExamSegmentsTests(SimpleTestCase):
@@ -107,3 +107,25 @@ class GetExamSegmentsTests(SimpleTestCase):
                     "Matriculation_formula_2023",
                 ]
                 self.assertListEqual(segments, expected)
+
+
+class ExamUploadPathTests(SimpleTestCase):
+    """Tests for ExamUploadPath."""
+
+    def test_builds_path_from_exam_segments_and_category(self) -> None:
+        """
+        Return full path for an exam file from segments and category.
+        """
+        exam = ExamFactory.build(
+            exam_type=ExamTypeChoices.MATRICULATION,
+            subject=SubjectChoices.MATHEMATICS,
+            level_type=LevelTypeChoices.BASIC,
+            year=2024,
+            month=MonthChoices.MAY,
+            formula=FormulaChoices.MATRICULATION_FORMULA_2023,
+        )
+
+        expected = "Exams/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/Tasks.pdf"
+        path_builder = ExamUploadPath("Tasks")
+        result = path_builder(exam, "zadanie.txt")
+        self.assertEqual(result, expected)
