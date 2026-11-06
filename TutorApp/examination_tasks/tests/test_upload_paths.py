@@ -56,9 +56,25 @@ class GetExamSegmentsTests(SimpleTestCase):
             "Mathematics",
             "Extended",
             "2025",
-            "11",
+            "05",
             "Matriculation_formula_2023",
         ]
+
+        segments = get_exam_segments(exam)
+        self.assertListEqual(segments, expected)
+
+    def test_returns_segments_for_eighth_grade_exam(self) -> None:
+        """Return full segment list for an eighth grade exam."""
+        exam = ExamFactory.build(
+            exam_type=ExamTypeChoices.EIGHTH_GRADE,
+            subject=SubjectChoices.MATHEMATICS,
+            level_type=None,
+            year=2025,
+            month=MonthChoices.MAY,
+            formula=FormulaChoices.E8_2018,
+        )
+
+        expected = ["Eighth_grade", "Mathematics", "2025", "05", "E8_2018"]
 
         segments = get_exam_segments(exam)
         self.assertListEqual(segments, expected)
