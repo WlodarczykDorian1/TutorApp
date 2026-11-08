@@ -1,5 +1,8 @@
 """Tests for examination_tasks.upload_paths."""
 
+from datetime import UTC, datetime
+from unittest.mock import patch
+
 from courses.choices import SubjectChoices
 from django.test import SimpleTestCase
 from examination_tasks.choices import (
@@ -9,9 +12,10 @@ from examination_tasks.choices import (
     MonthChoices,
 )
 from examination_tasks.models import Exam
-from examination_tasks.tests.factories import ExamFactory
+from examination_tasks.tests.factories import ExamFactory, ExamTaskFactory
 from examination_tasks.upload_paths import (
     ExamSubtaskScreensUploadPath,
+    ExamTaskIntroScreenUploadPath,
     ExamUploadPath,
     get_exam_segments,
 )
@@ -205,3 +209,32 @@ class ExamUploadPathTests(SimpleTestCase):
             with self.subTest(field_name=field_name):
                 upload_to = Exam._meta.get_field(field_name).upload_to
                 self.assertEqual(upload_to, expected)
+
+
+class ExamTaskIntroScreenUploadPathTests(SimpleTestCase):
+    """
+    Tests for ExamTaskIntroScreenUploadPath.
+    """
+
+    def test_builds_path_from_exam_segments_and_date(self) -> None:
+        """
+        Return a full path for a task intro from segments and date.
+        """
+        exam = ExamFactory.build(
+            exam_type=ExamTypeChoices.MATRICULATION,
+            subject=SubjectChoices.MATHEMATICS,
+            level_type=LevelTypeChoices.BASIC,
+            year=2024,
+            month=MonthChoices.MAY,
+            formula=FormulaChoices.MATRICULATION_FORMULA_2023,
+        )
+        exam_task = ExamTaskFactory.build(exam=exam, number=1)
+        frozen = datetime(2026, 11, 8, 21, 37, 00, tzinfo=UTC)
+        expected = "ExamScreens/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/01/Intro_20261108T213700.png"
+        path_builder = ExamTaskIntroScreenUploadPath()
+
+        with patch("examination_tasks.upload_paths.timezone.now", return_value=frozen):
+
+            result = path_builder(exam_task, "zadanie.txt")
+
+        self.assertEqual(result, expected)
