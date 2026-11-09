@@ -370,3 +370,59 @@ class ExamSubtaskScreensUploadPathTests(FrozenTimeTestCase):
         path_builder = ExamSubtaskScreensUploadPath("Exercise")
         result = path_builder(exam_subtask, "zadanie.txt")
         self.assertEqual(result, expected)
+
+    def test_builds_file_path_without_subnumber(self) -> None:
+        """
+        Return a full path for a subtask from segments, task number but without subnumber.
+        """
+        exam = ExamFactory.build(
+            exam_type=ExamTypeChoices.MATRICULATION,
+            subject=SubjectChoices.MATHEMATICS,
+            level_type=LevelTypeChoices.BASIC,
+            year=2024,
+            month=MonthChoices.MAY,
+            formula=FormulaChoices.MATRICULATION_FORMULA_2023,
+        )
+        exam_task = ExamTaskFactory.build(
+            exam=exam,
+            number=1,
+        )
+        exam_subtask = ExamSubtaskFactory.build(
+            exam_task=exam_task, null_subnumber=True
+        )
+        expected = "ExamScreens/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/01/Exercise_20261108T213742.png"
+        path_builder = ExamSubtaskScreensUploadPath("Exercise")
+        result = path_builder(exam_subtask, "zadanie.txt")
+        self.assertEqual(result, expected)
+
+    def test_formats_task_subnumber_as_two_digits(self) -> None:
+        """
+        Return exam task subnumber format for 1-digit number and 2-digit number.
+        For example 9 -> 09. and 10 -> 10.
+        """
+        cases = [
+            (9, "09"),
+            (10, "10"),
+        ]
+        exam = ExamFactory.build(
+            exam_type=ExamTypeChoices.MATRICULATION,
+            subject=SubjectChoices.MATHEMATICS,
+            level_type=LevelTypeChoices.BASIC,
+            year=2024,
+            month=MonthChoices.MAY,
+            formula=FormulaChoices.MATRICULATION_FORMULA_2023,
+        )
+        exam_task = ExamTaskFactory.build(
+            exam=exam,
+            number=1,
+        )
+        path_builder = ExamSubtaskScreensUploadPath("Exercise")
+        for subnumber, expected_subnumber in cases:
+            with self.subTest(subnumber=subnumber):
+                exam_subtask = ExamSubtaskFactory.build(
+                    exam_task=exam_task,
+                    subnumber=subnumber,
+                )
+                expected = f"ExamScreens/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/01/Exercise_{expected_subnumber}_20261108T213742.png"
+                result = path_builder(exam_subtask, "zadanie.txt")
+                self.assertEqual(result, expected)
