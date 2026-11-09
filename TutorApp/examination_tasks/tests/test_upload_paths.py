@@ -484,3 +484,12 @@ class ExamSubtaskScreensUploadPathTests(FrozenTimeTestCase):
             ExamSubtaskScreensUploadPath("Exercise"),
             ExamUploadPath("Exercise"),
         )
+
+    def test_not_equals_when_category_differs(self) -> None:
+        """
+        Treat objects with different category as not equal.
+        """
+        self.assertNotEqual(
+            ExamSubtaskScreensUploadPath("Exercise"),
+            ExamSubtaskScreensUploadPath("Answers"),
+        )
