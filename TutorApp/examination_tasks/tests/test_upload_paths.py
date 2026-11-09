@@ -303,7 +303,7 @@ class ExamTaskIntroScreenUploadPathTests(FrozenTimeTestCase):
                 result = path_builder(exam_task, "zadanie.txt")
                 self.assertEqual(result, expected)
 
-    def test_equals_when_classes_match(self) -> None:
+    def test_equals_when_class_match(self) -> None:
         """
         Treat objects with the same class as equal.
         """
@@ -466,3 +466,12 @@ class ExamSubtaskScreensUploadPathTests(FrozenTimeTestCase):
         result_1 = path_builder(exam_subtask, "zadanie.txt")
         result_2 = path_builder(exam_subtask, "cwiczenie.gif")
         self.assertEqual(result_1, result_2)
+
+    def test_equals_when_class_and_category_match(self) -> None:
+        """
+        Treat objects with the same class and category as equal.
+        """
+        self.assertEqual(
+            ExamSubtaskScreensUploadPath("Exercise"),
+            ExamSubtaskScreensUploadPath("Exercise"),
+        )
