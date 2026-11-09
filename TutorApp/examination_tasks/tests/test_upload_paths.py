@@ -505,3 +505,15 @@ class ExamSubtaskScreensUploadPathTests(FrozenTimeTestCase):
         path, _, _ = path_builder.deconstruct()
         expected_path = "examination_tasks.upload_paths.ExamSubtaskScreensUploadPath"
         self.assertEqual(path, expected_path)
+
+    def test_reconstructs_equal_object_from_tuple(self) -> None:
+        """
+        Reconstruct an equal object deconstructed from tuple.
+
+        Django migration files that record the states of objects are in text format.
+        Deconstruct() must return tuple which enables to reconstruct the original object.
+        """
+        original = ExamSubtaskScreensUploadPath("Exercise")
+        _, args, kwargs = original.deconstruct()
+        rebuilt = ExamSubtaskScreensUploadPath(*args, **kwargs)
+        self.assertEqual(original, rebuilt)
