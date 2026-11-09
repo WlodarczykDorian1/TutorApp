@@ -426,3 +426,33 @@ class ExamSubtaskScreensUploadPathTests(FrozenTimeTestCase):
                 expected = f"ExamScreens/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/01/Exercise_{expected_subnumber}_20261108T213742.png"
                 result = path_builder(exam_subtask, "zadanie.txt")
                 self.assertEqual(result, expected)
+
+    def test_formats_task_number_as_two_digits(self) -> None:
+        """
+        Return exam task number format for 1-digit number and 2-digit number.
+        """
+        cases = [
+            (9, "09"),
+            (10, "10"),
+        ]
+        exam = ExamFactory.build(
+            exam_type=ExamTypeChoices.MATRICULATION,
+            subject=SubjectChoices.MATHEMATICS,
+            level_type=LevelTypeChoices.BASIC,
+            year=2024,
+            month=MonthChoices.MAY,
+            formula=FormulaChoices.MATRICULATION_FORMULA_2023,
+        )
+        path_builder = ExamSubtaskScreensUploadPath("Exercise")
+        for number, expected_number in cases:
+            with self.subTest(number=number):
+                exam_task = ExamTaskFactory.build(
+                    exam=exam,
+                    number=number,
+                )
+                exam_subtask = ExamSubtaskFactory.build(
+                    exam_task=exam_task, subnumber=1
+                )
+                expected = f"ExamScreens/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/{expected_number}/Exercise_01_20261108T213742.png"
+                result = path_builder(exam_subtask, "zadanie.txt")
+                self.assertEqual(result, expected)
