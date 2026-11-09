@@ -11,7 +11,7 @@ from examination_tasks.choices import (
     LevelTypeChoices,
     MonthChoices,
 )
-from examination_tasks.models import Exam
+from examination_tasks.models import Exam, ExamTask
 from examination_tasks.tests.factories import ExamFactory, ExamTaskFactory
 from examination_tasks.upload_paths import (
     ExamSubtaskScreensUploadPath,
@@ -313,3 +313,14 @@ class ExamTaskIntroScreenUploadPathTests(SimpleTestCase):
         path, _, _ = path_builder.deconstruct()
         expected_path = "examination_tasks.upload_paths.ExamTaskIntroScreenUploadPath"
         self.assertEqual(path, expected_path)
+
+    def test_exam_task_file_field_uses_upload_path(self) -> None:
+        """
+        Configure intro screen field with an upload path.
+
+        Passing the class instead of an instance to upload_to fails
+        only when a file is saved, so it is checked here.
+        """
+        expected = ExamTaskIntroScreenUploadPath()
+        upload_to = ExamTask._meta.get_field("intro_screen").upload_to
+        self.assertEqual(upload_to, expected)
