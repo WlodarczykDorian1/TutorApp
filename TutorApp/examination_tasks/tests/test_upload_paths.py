@@ -12,7 +12,11 @@ from examination_tasks.choices import (
     MonthChoices,
 )
 from examination_tasks.models import Exam, ExamTask
-from examination_tasks.tests.factories import ExamFactory, ExamTaskFactory
+from examination_tasks.tests.factories import (
+    ExamFactory,
+    ExamSubtaskFactory,
+    ExamTaskFactory,
+)
 from examination_tasks.upload_paths import (
     ExamSubtaskScreensUploadPath,
     ExamTaskIntroScreenUploadPath,
@@ -335,3 +339,34 @@ class ExamTaskIntroScreenUploadPathTests(FrozenTimeTestCase):
         expected = ExamTaskIntroScreenUploadPath()
         upload_to = ExamTask._meta.get_field("intro_screen").upload_to
         self.assertEqual(upload_to, expected)
+
+
+class ExamSubtaskScreensUploadPathTests(FrozenTimeTestCase):
+    """
+    Tests for ExamSubtaskScreensUploadPath.
+    """
+
+    def test_builds_file_path_with_subnumber(self) -> None:
+        """
+        Return a full path for a subtask from segments, task number, task subnumber and date.
+        """
+        exam = ExamFactory.build(
+            exam_type=ExamTypeChoices.MATRICULATION,
+            subject=SubjectChoices.MATHEMATICS,
+            level_type=LevelTypeChoices.BASIC,
+            year=2024,
+            month=MonthChoices.MAY,
+            formula=FormulaChoices.MATRICULATION_FORMULA_2023,
+        )
+        exam_task = ExamTaskFactory.build(
+            exam=exam,
+            number=1,
+        )
+        exam_subtask = ExamSubtaskFactory.build(
+            exam_task=exam_task,
+            subnumber=2,
+        )
+        expected = "ExamScreens/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/01/Exercise_02_20261108T213742.png"
+        path_builder = ExamSubtaskScreensUploadPath("Exercise")
+        result = path_builder(exam_subtask, "zadanie.txt")
+        self.assertEqual(result, expected)
