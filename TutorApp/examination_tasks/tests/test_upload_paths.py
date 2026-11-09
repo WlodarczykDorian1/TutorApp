@@ -21,6 +21,29 @@ from examination_tasks.upload_paths import (
 )
 
 
+class FrozenTimeTestCase(SimpleTestCase):
+    """
+    Freeze timezone.now() used by examination_tasks.upload_paths.
+
+    Every test sees FROZEN_NOW as the current time, so paths
+    containing a timestamp can be compared with literals.
+    Subclasses overriding setUp() must call super().setUp().
+    """
+
+    FROZEN_NOW = datetime(2026, 11, 8, 21, 37, 42, tzinfo=UTC)
+
+    def setUp(self) -> None:
+        """
+        Freeze the current time for every test in subclasses.
+        """
+        super().setUp()
+        patcher = patch(
+            "examination_tasks.upload_paths.timezone.now", return_value=self.FROZEN_NOW
+        )
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+
 class GetExamSegmentsTests(SimpleTestCase):
     """
     Tests for get_exam_segments.
@@ -211,22 +234,10 @@ class ExamUploadPathTests(SimpleTestCase):
                 self.assertEqual(upload_to, expected)
 
 
-class ExamTaskIntroScreenUploadPathTests(SimpleTestCase):
+class ExamTaskIntroScreenUploadPathTests(FrozenTimeTestCase):
     """
     Tests for ExamTaskIntroScreenUploadPath.
     """
-
-    FROZEN_NOW = datetime(2026, 11, 8, 21, 37, 42, tzinfo=UTC)
-
-    def setUp(self) -> None:
-        """
-        Freeze the current time for every test in this class.
-        """
-        patcher = patch(
-            "examination_tasks.upload_paths.timezone.now", return_value=self.FROZEN_NOW
-        )
-        patcher.start()
-        self.addCleanup(patcher.stop)
 
     def test_builds_path_from_exam_segments_and_date(self) -> None:
         """
