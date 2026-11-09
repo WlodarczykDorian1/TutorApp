@@ -216,6 +216,18 @@ class ExamTaskIntroScreenUploadPathTests(SimpleTestCase):
     Tests for ExamTaskIntroScreenUploadPath.
     """
 
+    FROZEN_NOW = datetime(2026, 11, 8, 21, 37, 42, tzinfo=UTC)
+
+    def setUp(self) -> None:
+        """
+        Freeze the current time for every test in this class.
+        """
+        patcher = patch(
+            "examination_tasks.upload_paths.timezone.now", return_value=self.FROZEN_NOW
+        )
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
     def test_builds_path_from_exam_segments_and_date(self) -> None:
         """
         Return a full path for a task intro from segments and date.
@@ -229,12 +241,21 @@ class ExamTaskIntroScreenUploadPathTests(SimpleTestCase):
             formula=FormulaChoices.MATRICULATION_FORMULA_2023,
         )
         exam_task = ExamTaskFactory.build(exam=exam, number=1)
-        frozen = datetime(2026, 11, 8, 21, 37, 00, tzinfo=UTC)
-        expected = "ExamScreens/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/01/Intro_20261108T213700.png"
+        expected = "ExamScreens/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/01/Intro_20261108T213742.png"
         path_builder = ExamTaskIntroScreenUploadPath()
 
-        with patch("examination_tasks.upload_paths.timezone.now", return_value=frozen):
-
-            result = path_builder(exam_task, "zadanie.txt")
+        result = path_builder(exam_task, "zadanie.txt")
 
         self.assertEqual(result, expected)
+
+    def test_ignores_filenames(self) -> None:
+        """
+        Return the same path for an exam task file from two different filenames.
+        """
+        exam_task = ExamTaskFactory.build()
+        path_builder = ExamTaskIntroScreenUploadPath()
+
+        result_1 = path_builder(exam_task, "zadanie.txt")
+        result_2 = path_builder(exam_task, "ćwiczenie.jpg")
+
+        self.assertEqual(result_1, result_2)
