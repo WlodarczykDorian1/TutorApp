@@ -287,3 +287,29 @@ class ExamTaskIntroScreenUploadPathTests(SimpleTestCase):
                 expected = f"ExamScreens/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/{expected_number}/Intro_20261108T213742.png"
                 result = path_builder(exam_task, "zadanie.txt")
                 self.assertEqual(result, expected)
+
+    def test_equals_when_classes_match(self) -> None:
+        """
+        Treat objects with the same class as equal.
+        """
+        self.assertEqual(
+            ExamTaskIntroScreenUploadPath(), ExamTaskIntroScreenUploadPath()
+        )
+
+    def test_not_equals_when_class_differs(self) -> None:
+        """
+        Treat objects with different class as not equal.
+        """
+        self.assertNotEqual(ExamTaskIntroScreenUploadPath(), ExamUploadPath("Tasks"))
+
+    def test_deconstructs_import_path(self) -> None:
+        """
+        Deconstruct to the import path stored in migration files.
+
+        Existing migrations reference ExamTaskIntroScreenUploadPath by this exact path.
+        Moving or renaming the class would break loading those migrations.
+        """
+        path_builder = ExamTaskIntroScreenUploadPath()
+        path, _, _ = path_builder.deconstruct()
+        expected_path = "examination_tasks.upload_paths.ExamTaskIntroScreenUploadPath"
+        self.assertEqual(path, expected_path)
