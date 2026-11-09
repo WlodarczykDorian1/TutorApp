@@ -493,3 +493,15 @@ class ExamSubtaskScreensUploadPathTests(FrozenTimeTestCase):
             ExamSubtaskScreensUploadPath("Exercise"),
             ExamSubtaskScreensUploadPath("Answers"),
         )
+
+    def test_deconstructs_import_path(self) -> None:
+        """
+        Deconstruct to the import path stored in migration files.
+
+        Existing migrations reference ExamSubtaskScreensUploadPath by this exact path.
+        Moving or renaming the class would break loading those migrations.
+        """
+        path_builder = ExamSubtaskScreensUploadPath("Exercise")
+        path, _, _ = path_builder.deconstruct()
+        expected_path = "examination_tasks.upload_paths.ExamSubtaskScreensUploadPath"
+        self.assertEqual(path, expected_path)
