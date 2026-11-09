@@ -182,7 +182,7 @@ class ExamUploadPathTests(SimpleTestCase):
         """
         self.assertEqual(ExamUploadPath("Tasks"), ExamUploadPath("Tasks"))
 
-    def test_not_equals_when_categories_differs(self) -> None:
+    def test_not_equals_when_category_differs(self) -> None:
         """
         Treat objects with different category as not equal.
         """
@@ -518,7 +518,7 @@ class ExamSubtaskScreensUploadPathTests(FrozenTimeTestCase):
         rebuilt = ExamSubtaskScreensUploadPath(*args, **kwargs)
         self.assertEqual(original, rebuilt)
 
-    def test_exam_subtask_file_fields_uses_upload_path(self) -> None:
+    def test_exam_subtask_file_fields_use_upload_path(self) -> None:
         """
         Configure each subtasks file fields with an upload path for its category.
 
