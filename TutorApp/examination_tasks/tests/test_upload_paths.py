@@ -456,3 +456,13 @@ class ExamSubtaskScreensUploadPathTests(FrozenTimeTestCase):
                 expected = f"ExamScreens/Matriculation/Mathematics/Basic/2024/05/Matriculation_formula_2023/{expected_number}/Exercise_01_20261108T213742.png"
                 result = path_builder(exam_subtask, "zadanie.txt")
                 self.assertEqual(result, expected)
+
+    def test_ignores_filenames(self) -> None:
+        """
+        Return the same path for an exam subtask file from two different filenames.
+        """
+        exam_subtask = ExamSubtaskFactory.build()
+        path_builder = ExamSubtaskScreensUploadPath("Exercise")
+        result_1 = path_builder(exam_subtask, "zadanie.txt")
+        result_2 = path_builder(exam_subtask, "cwiczenie.gif")
+        self.assertEqual(result_1, result_2)
