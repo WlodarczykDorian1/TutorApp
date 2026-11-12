@@ -64,8 +64,8 @@ class FileStorageAssertionMixin:
 class FileSignalTestsMixin(FileStorageAssertionMixin):
     """Provides file-based signal tests common to all models."""
 
-    factory = type[DjangoModelFactory]
-    FILE_FIELDS = tuple[str, ...]
+    factory: type[DjangoModelFactory]
+    FILE_FIELDS: tuple[str, ...]
 
 
 @override_settings(STORAGES=IN_MEMORY_STORAGES)
