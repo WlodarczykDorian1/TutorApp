@@ -1,5 +1,6 @@
 """Tests for examination_tasks.signals"""
 
+from django.core.files.base import ContentFile
 from django.test import TestCase, override_settings
 from examination_tasks.tests.factories import ExamFactory
 
@@ -37,3 +38,38 @@ class ExamDeleteSignalTests(TestCase):
             with self.subTest(field_name=field_name, stage="after delete"):
                 storage = getattr(exam, field_name).storage
                 self.assertFalse(storage.exists(file_name))
+
+    def test_old_file_is_removed_after_replace(self) -> None:
+        """Replacing a file removes the old one and keeps the other files intact."""
+        for replaced_field in self.FILE_FIELDS:
+            with self.subTest(replaced_field=replaced_field):
+                exam = ExamFactory()
+                file_names = {
+                    field_name: getattr(exam, field_name).name
+                    for field_name in self.FILE_FIELDS
+                }
+
+                for field_name, file_name in file_names.items():
+                    with self.subTest(field_name=field_name, stage="before save"):
+                        storage = getattr(exam, field_name).storage
+                        self.assertTrue(storage.exists(file_name))
+
+                new_file = ContentFile(b"new content", name=f"new_{replaced_field}.pdf")
+
+                with self.captureOnCommitCallbacks(execute=True):
+                    setattr(exam, replaced_field, new_file)
+                    exam.save()
+
+                storage = getattr(exam, replaced_field).storage
+                old_name = file_names[replaced_field]
+                self.assertFalse(storage.exists(old_name))
+
+                new_name = getattr(exam, replaced_field).name
+                self.assertTrue(storage.exists(new_name))
+
+                for field_name, file_name in file_names.items():
+                    if field_name == replaced_field:
+                        continue
+                    with self.subTest(field_name=field_name, stage="after save"):
+                        storage = getattr(exam, field_name).storage
+                        self.assertTrue(storage.exists(file_name))
