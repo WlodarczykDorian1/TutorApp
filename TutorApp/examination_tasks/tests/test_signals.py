@@ -5,6 +5,7 @@ from django.db import models
 from django.test import TestCase, override_settings
 from examination_tasks.choices import LevelTypeChoices
 from examination_tasks.tests.factories import ExamFactory
+from factory.django import DjangoModelFactory
 
 IN_MEMORY_STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.InMemoryStorage"},
@@ -60,10 +61,18 @@ class FileStorageAssertionMixin:
                 self.assertEqual(storage.exists(file_name), should_exist)
 
 
+class FileSignalTestsMixin(FileStorageAssertionMixin):
+    """Provides file-based signal tests common to all models."""
+
+    factory = type[DjangoModelFactory]
+    FILE_FIELDS = tuple[str, ...]
+
+
 @override_settings(STORAGES=IN_MEMORY_STORAGES)
-class ExamFileSignalTests(FileStorageAssertionMixin, TestCase):
+class ExamFileSignalTests(FileSignalTestsMixin, TestCase):
     """Tests for cleaning up exam files in the storage."""
 
+    factory = ExamFactory
     FILE_FIELDS = ("tasks_file", "solutions_file")
 
     def test_files_are_removed_after_delete(self) -> None:
