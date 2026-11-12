@@ -61,8 +61,8 @@ class FileStorageAssertionMixin:
 
 
 @override_settings(STORAGES=IN_MEMORY_STORAGES)
-class ExamDeleteSignalTests(FileStorageAssertionMixin, TestCase):
-    """Tests for removing exam files when exams are deleted, replaced and saved."""
+class ExamFileSignalTests(FileStorageAssertionMixin, TestCase):
+    """Tests for cleaning up exam files in the storage."""
 
     FILE_FIELDS = ("tasks_file", "solutions_file")
 
@@ -119,15 +119,11 @@ class ExamDeleteSignalTests(FileStorageAssertionMixin, TestCase):
     def test_files_are_kept_when_other_field_changes(self) -> None:
         """Changing another field keeps files in the storage."""
         exam = ExamFactory()
-        file_names = {
-            field_name: getattr(exam, field_name).name
-            for field_name in self.FILE_FIELDS
-        }
+        file_names = self.get_file_names(exam, self.FILE_FIELDS)
 
-        for field_name, file_name in file_names.items():
-            with self.subTest(field_name=field_name, stage="before save"):
-                storage = getattr(exam, field_name).storage
-                self.assertTrue(storage.exists(file_name))
+        self.assert_files_exist(
+            exam, file_names, should_exist=True, stage="before save"
+        )
 
         with self.captureOnCommitCallbacks(execute=True) as callbacks:
             exam.level_type = LevelTypeChoices.EXTENDED
@@ -135,7 +131,4 @@ class ExamDeleteSignalTests(FileStorageAssertionMixin, TestCase):
 
         self.assertEqual(len(callbacks), 0)
 
-        for field_name, file_name in file_names.items():
-            with self.subTest(field_name=field_name, stage="after save"):
-                storage = getattr(exam, field_name).storage
-                self.assertTrue(storage.exists(file_name))
+        self.assert_files_exist(exam, file_names, should_exist=True, stage="after save")
