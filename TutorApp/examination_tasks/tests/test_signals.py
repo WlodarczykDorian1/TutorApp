@@ -61,31 +61,22 @@ class FileStorageAssertionMixin:
 
 
 @override_settings(STORAGES=IN_MEMORY_STORAGES)
-class ExamDeleteSignalTests(TestCase):
-    """Tests for removing attachment files when exams are deleted."""
+class ExamDeleteSignalTests(FileStorageAssertionMixin, TestCase):
+    """Tests for removing exam files when exams are deleted, replaced and saved."""
 
     FILE_FIELDS = ("tasks_file", "solutions_file")
 
     def test_files_are_removed_after_delete(self) -> None:
         """Deleting an exam removes its files from the storage."""
         exam = ExamFactory()
-        file_names = {
-            field_name: getattr(exam, field_name).name
-            for field_name in self.FILE_FIELDS
-        }
+        file_names = self.get_file_names(exam, self.FILE_FIELDS)
 
-        for field_name, file_name in file_names.items():
-            with self.subTest(field_name=field_name, stage="before delete"):
-                storage = getattr(exam, field_name).storage
-                self.assertTrue(storage.exists(file_name))
+        self.assert_files_exist(exam, file_names, True, "before delete")
 
         with self.captureOnCommitCallbacks(execute=True):
             exam.delete()
 
-        for field_name, file_name in file_names.items():
-            with self.subTest(field_name=field_name, stage="after delete"):
-                storage = getattr(exam, field_name).storage
-                self.assertFalse(storage.exists(file_name))
+        self.assert_files_exist(exam, file_names, False, "after delete")
 
     def test_old_file_is_removed_after_replace(self) -> None:
         """Replacing a file removes the old one and keeps the other files intact."""
