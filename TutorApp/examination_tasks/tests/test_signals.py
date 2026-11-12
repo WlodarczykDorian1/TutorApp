@@ -2,6 +2,7 @@
 
 from django.core.files.base import ContentFile
 from django.test import TestCase, override_settings
+from examination_tasks.choices import LevelTypeChoices
 from examination_tasks.tests.factories import ExamFactory
 
 IN_MEMORY_STORAGES = {
@@ -73,3 +74,27 @@ class ExamDeleteSignalTests(TestCase):
                     with self.subTest(field_name=field_name, stage="after save"):
                         storage = getattr(exam, field_name).storage
                         self.assertTrue(storage.exists(file_name))
+
+    def test_files_are_kept_when_other_field_changes(self) -> None:
+        """Changing another field keeps files in the storage."""
+        exam = ExamFactory()
+        file_names = {
+            field_name: getattr(exam, field_name).name
+            for field_name in self.FILE_FIELDS
+        }
+
+        for field_name, file_name in file_names.items():
+            with self.subTest(field_name=field_name, stage="before save"):
+                storage = getattr(exam, field_name).storage
+                self.assertTrue(storage.exists(file_name))
+
+        with self.captureOnCommitCallbacks(execute=True) as callbacks:
+            exam.level_type = LevelTypeChoices.EXTENDED
+            exam.save()
+
+        self.assertEqual(len(callbacks), 0)
+
+        for field_name, file_name in file_names.items():
+            with self.subTest(field_name=field_name, stage="after save"):
+                storage = getattr(exam, field_name).storage
+                self.assertTrue(storage.exists(file_name))
