@@ -89,10 +89,9 @@ class ExamDeleteSignalTests(FileStorageAssertionMixin, TestCase):
                 exam = ExamFactory()
                 file_names = self.get_file_names(exam, self.FILE_FIELDS)
 
-                for field_name, file_name in file_names.items():
-                    with self.subTest(field_name=field_name, stage="before save"):
-                        storage = getattr(exam, field_name).storage
-                        self.assertTrue(storage.exists(file_name))
+                self.assert_files_exist(
+                    exam, file_names, should_exist=True, stage="before replace"
+                )
 
                 new_file = ContentFile(b"new content", name=f"new_{replaced_field}.pdf")
 
@@ -107,12 +106,15 @@ class ExamDeleteSignalTests(FileStorageAssertionMixin, TestCase):
                 new_name = getattr(exam, replaced_field).name
                 self.assertTrue(storage.exists(new_name))
 
-                for field_name, file_name in file_names.items():
-                    if field_name == replaced_field:
-                        continue
-                    with self.subTest(field_name=field_name, stage="after save"):
-                        storage = getattr(exam, field_name).storage
-                        self.assertTrue(storage.exists(file_name))
+                untouched_file_names = {
+                    field_name: file_name
+                    for field_name, file_name in file_names.items()
+                    if field_name != replaced_field
+                }
+
+                self.assert_files_exist(
+                    exam, untouched_file_names, should_exist=True, stage="after replace"
+                )
 
     def test_files_are_kept_when_other_field_changes(self) -> None:
         """Changing another field keeps files in the storage."""
