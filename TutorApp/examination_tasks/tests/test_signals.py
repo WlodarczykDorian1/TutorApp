@@ -36,6 +36,29 @@ class FileStorageAssertionMixin:
             field_name: getattr(instance, field_name).name for field_name in field_names
         }
 
+    def assert_files_exist(
+        self,
+        instance: models.Model,
+        file_names: dict[str, str],
+        should_exist: bool,
+        stage: str,
+    ) -> None:
+        """Assert whether the given files exist in the storage.
+
+        Each file is checked in a separate subtest, so a failure
+        shows which field and stage it concerns.
+
+        Args:
+            instance: Model instance to read the file storages from.
+            file_names: Mapping of each file field name to the name of its file.
+            should_exist: True if the files are expected to exist, False otherwise.
+            stage: Label of the test stage shown in the subtest report.
+        """
+        for field_name, file_name in file_names.items():
+            with self.subTest(field_name=field_name, stage=stage):
+                storage = getattr(instance, field_name).storage
+                self.assertEqual(storage.exists(file_name), should_exist)
+
 
 @override_settings(STORAGES=IN_MEMORY_STORAGES)
 class ExamDeleteSignalTests(TestCase):
