@@ -1,6 +1,7 @@
 """Tests for examination_tasks.signals"""
 
 from django.core.files.base import ContentFile
+from django.db import models
 from django.test import TestCase, override_settings
 from examination_tasks.choices import LevelTypeChoices
 from examination_tasks.tests.factories import ExamFactory
@@ -11,6 +12,29 @@ IN_MEMORY_STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
+
+
+class FileStorageAssertionMixin:
+    """Provide assertions for checking files in the storage."""
+
+    def get_file_names(
+        self,
+        instance: models.Model,
+        field_names: tuple[str, ...],
+    ) -> dict[str, str]:
+        """
+        Collect names of the files stored in the given file fields.
+
+        Args:
+             instance: Model instance to read the file fields from.
+             field_names: Name of the file fields to collect.
+
+        Returns:
+            Mapping of each file field name to the name of its file in the storage.
+        """
+        return {
+            field_name: getattr(instance, field_name).name for field_name in field_names
+        }
 
 
 @override_settings(STORAGES=IN_MEMORY_STORAGES)
