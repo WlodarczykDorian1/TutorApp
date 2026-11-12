@@ -71,22 +71,23 @@ class ExamDeleteSignalTests(FileStorageAssertionMixin, TestCase):
         exam = ExamFactory()
         file_names = self.get_file_names(exam, self.FILE_FIELDS)
 
-        self.assert_files_exist(exam, file_names, True, "before delete")
+        self.assert_files_exist(
+            exam, file_names, should_exist=True, stage="before delete"
+        )
 
         with self.captureOnCommitCallbacks(execute=True):
             exam.delete()
 
-        self.assert_files_exist(exam, file_names, False, "after delete")
+        self.assert_files_exist(
+            exam, file_names, should_exist=False, stage="after delete"
+        )
 
     def test_old_file_is_removed_after_replace(self) -> None:
         """Replacing a file removes the old one and keeps the other files intact."""
         for replaced_field in self.FILE_FIELDS:
             with self.subTest(replaced_field=replaced_field):
                 exam = ExamFactory()
-                file_names = {
-                    field_name: getattr(exam, field_name).name
-                    for field_name in self.FILE_FIELDS
-                }
+                file_names = self.get_file_names(exam, self.FILE_FIELDS)
 
                 for field_name, file_name in file_names.items():
                     with self.subTest(field_name=field_name, stage="before save"):
