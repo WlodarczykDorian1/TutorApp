@@ -62,11 +62,24 @@ class FileStorageAssertionMixin:
 
 
 class FileSignalTestsMixin(FileStorageAssertionMixin):
-    """Provide file-based signal tests for models
-    that include file fields and connected signals."""
+    """Provide signal tests shared by models with file fields."""
 
     factory: type[DjangoModelFactory]
     FILE_FIELDS: tuple[str, ...]
+
+    def change_non_file_field(self, instance: models.Model) -> None:
+        """
+        Change a model field that is not a file field.
+
+        Subclasses must override this method so the keep-files test
+        saves the instance with a real change that is not a file.
+
+        Args:
+            instance: A model that contains a non-file field that can be changed.
+        """
+        raise NotImplementedError(
+            "Subclasses must override change_non_file_field() to modify a non-file field."
+        )
 
 
 @override_settings(STORAGES=IN_MEMORY_STORAGES)
