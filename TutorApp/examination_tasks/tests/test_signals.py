@@ -81,6 +81,23 @@ class FileSignalTestsMixin(FileStorageAssertionMixin):
             "Subclasses must override change_non_file_field() to modify a non-file field."
         )
 
+    def test_files_are_removed_after_delete(self) -> None:
+        """Deleting an instance removes its files from the storage."""
+        instance = self.factory()
+
+        file_names = self.get_file_names(instance, self.FILE_FIELDS)
+
+        self.assert_files_exist(
+            instance, file_names, should_exist=True, stage="before delete"
+        )
+
+        with self.captureOnCommitCallbacks(execute=True):
+            instance.delete()
+
+        self.assert_files_exist(
+            instance, file_names, should_exist=False, stage="after delete"
+        )
+
 
 @override_settings(STORAGES=IN_MEMORY_STORAGES)
 class ExamFileSignalTests(FileSignalTestsMixin, TestCase):
@@ -88,6 +105,9 @@ class ExamFileSignalTests(FileSignalTestsMixin, TestCase):
 
     factory = ExamFactory
     FILE_FIELDS = ("tasks_file", "solutions_file")
+
+    def change_non_file_field(self, instance: models.Model) -> None:
+        instance.level_type = LevelTypeChoices.EXTENDED
 
     def test_files_are_removed_after_delete(self) -> None:
         """Deleting an exam removes its files from the storage."""
