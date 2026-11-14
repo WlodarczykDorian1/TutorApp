@@ -98,6 +98,44 @@ class FileSignalTestsMixin(FileStorageAssertionMixin):
             instance, file_names, should_exist=False, stage="after delete"
         )
 
+    def test_old_file_is_remove_after_replace(self) -> None:
+        """Replacing a file removes the old one and keeps the other files intact."""
+        for replaced_field in self.FILE_FIELDS:
+            with self.subTest(replaced_field=replaced_field):
+                instance = self.factory()
+                file_names = self.get_file_names(instance, self.FILE_FIELDS)
+
+                self.assert_files_exist(
+                    instance, file_names, should_exist=True, stage="before replace"
+                )
+
+                new_file = ContentFile(b"new content", name=f"new_{replaced_field}.pdf")
+
+                with self.captureOnCommitCallbacks(execute=True):
+                    setattr(instance, replaced_field, new_file)
+                    instance.save()
+
+                storage = getattr(instance, replaced_field).storage
+
+                old_name = file_names[replaced_field]
+                self.assertFalse(storage.exists(old_name))
+
+                new_name = getattr(instance, replaced_field).name
+                self.assertTrue(storage.exists(new_name))
+
+                untouched_file_names = {
+                    field_name: file_name
+                    for field_name, file_name in file_names.items()
+                    if field_name != replaced_field
+                }
+
+                self.assert_files_exist(
+                    instance,
+                    untouched_file_names,
+                    should_exist=True,
+                    stage="after replace",
+                )
+
 
 @override_settings(STORAGES=IN_MEMORY_STORAGES)
 class ExamFileSignalTests(FileSignalTestsMixin, TestCase):
