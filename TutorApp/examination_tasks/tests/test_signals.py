@@ -136,6 +136,25 @@ class FileSignalTestsMixin(FileStorageAssertionMixin):
                     stage="after replace",
                 )
 
+    def test_files_are_kept_when_other_field_changes(self) -> None:
+        """Changing another field keeps files in the storage."""
+        instance = self.factory()
+        file_names = self.get_file_names(instance, self.FILE_FIELDS)
+
+        self.assert_files_exist(
+            instance, file_names, should_exist=True, stage="before save"
+        )
+
+        with self.captureOnCommitCallbacks(execute=True) as callbacks:
+            self.change_non_file_field(instance)
+            instance.save()
+
+        self.assertEqual(len(callbacks), 0)
+
+        self.assert_files_exist(
+            instance, file_names, should_exist=True, stage="after save"
+        )
+
 
 @override_settings(STORAGES=IN_MEMORY_STORAGES)
 class ExamFileSignalTests(FileSignalTestsMixin, TestCase):
