@@ -75,7 +75,7 @@ class FileSignalTestsMixin(FileStorageAssertionMixin):
         saves the instance with a real change that is not a file.
 
         Args:
-            instance: A model that contains a non-file field that can be changed.
+            instance: Model instance to modify before saving.
         """
         raise NotImplementedError(
             "Subclasses must override change_non_file_field() to modify a non-file field."
