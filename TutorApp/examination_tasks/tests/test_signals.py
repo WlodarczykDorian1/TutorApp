@@ -98,7 +98,7 @@ class FileSignalTestsMixin(FileStorageAssertionMixin):
             instance, file_names, should_exist=False, stage="after delete"
         )
 
-    def test_old_file_is_remove_after_replace(self) -> None:
+    def test_old_file_is_removed_after_replace(self) -> None:
         """Replacing a file removes the old one and keeps the other files intact."""
         for replaced_field in self.FILE_FIELDS:
             with self.subTest(replaced_field=replaced_field):
