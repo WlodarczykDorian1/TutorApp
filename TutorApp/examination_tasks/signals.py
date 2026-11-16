@@ -3,7 +3,7 @@ from typing import Any
 
 from django.core.files.storage import Storage
 from django.db import models, transaction
-from django.db.models.signals import post_delete, pre_save
+from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 from examination_tasks.models import Exam, ExamSubtask, ExamTask
 
@@ -213,3 +213,63 @@ def remember_old_exam_task_screen(
         **kwargs: Extra signal arguments (unused).
     """
     remember_old_file_names(sender, instance, ["intro_screen"], raw)
+
+
+@receiver(post_save, sender=Exam)
+def delete_old_exam_files(
+    sender: type[Exam],
+    instance: Exam,
+    raw: bool,
+    **kwargs: Any,
+) -> None:
+    """
+    Delete old exam tasks and solution file when they are replaced with new ones.
+
+    Args:
+        sender: Model class that that has just been saved.
+        instance: Exam about to be saved.
+        raw: True when the instance is saved as-is from a fixture (loaddata).
+            The database may be inconsistent then, so nothing is done.
+        **kwargs: Extra signal arguments (unused).
+    """
+    delete_replaced_files(instance, raw)
+
+
+@receiver(post_save, sender=ExamTask)
+def delete_old_exam_task_screen(
+    sender: type[ExamTask],
+    instance: ExamTask,
+    raw: bool,
+    **kwargs: Any,
+) -> None:
+    """
+    Delete old exam task intro screen when it is replaced with new one.
+
+    Args:
+        sender: Model class that that has just been saved.
+        instance: Exam task about to be saved.
+        raw: True when the instance is saved as-is from a fixture (loaddata).
+            The database may be inconsistent then, so nothing is done.
+        **kwargs: Extra signal arguments (unused).
+    """
+    delete_replaced_files(instance, raw)
+
+
+@receiver(post_save, sender=ExamSubtask)
+def delete_old_exam_subtask_screens(
+    sender: type[ExamSubtask],
+    instance: ExamSubtask,
+    raw: bool,
+    **kwargs: Any,
+) -> None:
+    """
+    Delete old screens when they are replaced with new ones.
+
+    Args:
+        sender: Model class that that has just been saved.
+        instance: Subtask about to be saved.
+        raw: True when the instance is saved as-is from a fixture (loaddata).
+            The database may be inconsistent then, so nothing is done.
+        **kwargs: Extra signal arguments (unused).
+    """
+    delete_replaced_files(instance, raw)
