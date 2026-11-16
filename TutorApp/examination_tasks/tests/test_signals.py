@@ -1,8 +1,8 @@
 """Tests for examination_tasks.signals"""
 
 from django.core.files.base import ContentFile
-from django.db import models
-from django.test import TestCase, override_settings
+from django.db import IntegrityError, models
+from django.test import TestCase, TransactionTestCase, override_settings
 from examination_tasks.choices import LevelTypeChoices
 from examination_tasks.tests.factories import (
     ExamFactory,
@@ -17,6 +17,10 @@ IN_MEMORY_STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
+
+EXAM_FILE_FIELDS = ("tasks_file", "solutions_file")
+EXAM_TASK_FILE_FIELDS = ("intro_screen",)
+EXAM_SUBTASK_FILE_FIELDS = ("instruction_screen", "solution_screen")
 
 
 class FileStorageAssertionMixin:
@@ -175,7 +179,7 @@ class ExamFileSignalTests(FileSignalTestsMixin, TestCase):
     """Tests for cleaning up exam files in the storage."""
 
     factory = ExamFactory
-    FILE_FIELDS = ("tasks_file", "solutions_file")
+    FILE_FIELDS = EXAM_FILE_FIELDS
 
     def change_non_file_field(self, instance: models.Model) -> None:
         instance.level_type = LevelTypeChoices.EXTENDED
@@ -186,7 +190,7 @@ class ExamTaskFileSignalTests(FileSignalTestsMixin, TestCase):
     """Tests for cleaning up exam task files in the storage."""
 
     factory = ExamTaskFactory
-    FILE_FIELDS = ("intro_screen",)
+    FILE_FIELDS = EXAM_TASK_FILE_FIELDS
 
     def create_instance(self) -> models.Model:
         return self.factory(with_intro=True)
@@ -200,10 +204,77 @@ class ExamSubtaskFileSignalTests(FileSignalTestsMixin, TestCase):
     """Tests for cleaning up exam subtask files in the storage."""
 
     factory = ExamSubtaskFactory
-    FILE_FIELDS = ("instruction_screen", "solution_screen")
+    FILE_FIELDS = EXAM_SUBTASK_FILE_FIELDS
 
     def create_instance(self) -> models.Model:
         return self.factory(with_all_screens=True)
 
     def change_non_file_field(self, instance: models.Model) -> None:
         instance.instruction_content = "This is an instruction."
+
+
+@override_settings(STORAGES=IN_MEMORY_STORAGES)
+class ExamCascadeFileSignalTests(FileStorageAssertionMixin, TestCase):
+    """Tests for cleaning up exam cascade files in the storage."""
+
+    def test_files_are_deleted_by_cascade(self) -> None:
+        """Deleting an exam results in deletion of exam task and exam subtask files."""
+
+        exam = ExamFactory()
+        exam_task = ExamTaskFactory(exam=exam, with_intro=True)
+        exam_subtask = ExamSubtaskFactory(exam_task=exam_task, with_all_screens=True)
+        exam_task_file_names = self.get_file_names(exam_task, EXAM_TASK_FILE_FIELDS)
+        exam_subtask_file_names = self.get_file_names(
+            exam_subtask, EXAM_SUBTASK_FILE_FIELDS
+        )
+
+        self.assert_files_exist(
+            exam_task, exam_task_file_names, should_exist=True, stage="before delete"
+        )
+        self.assert_files_exist(
+            exam_subtask,
+            exam_subtask_file_names,
+            should_exist=True,
+            stage="before delete",
+        )
+
+        self.assertEqual(exam_task.exam, exam)
+        self.assertEqual(exam_subtask.exam_task.exam, exam)
+
+        with self.captureOnCommitCallbacks(execute=True):
+            exam.delete()
+
+        self.assert_files_exist(
+            exam_task, exam_task_file_names, should_exist=False, stage="after delete"
+        )
+        self.assert_files_exist(
+            exam_subtask,
+            exam_subtask_file_names,
+            should_exist=False,
+            stage="after delete",
+        )
+
+
+@override_settings(STORAGES=IN_MEMORY_STORAGES)
+class ExamFailedSaveFileSignalTests(FileStorageAssertionMixin, TransactionTestCase):
+    """Tests for cleaning up exam files after failed save."""
+
+    def test_old_file_is_kept_when_save_fails(self) -> None:
+        """A failed save after replacing a file keeps the old file in the storage."""
+        exam = ExamFactory()
+        file_names = self.get_file_names(exam, EXAM_FILE_FIELDS)
+
+        self.assert_files_exist(
+            exam, file_names, should_exist=True, stage="before save"
+        )
+        new_tasks_file = ContentFile(b"new content", name="new_tasks.pdf")
+
+        exam.tasks_file = new_tasks_file
+        exam.year = None
+
+        with self.assertRaises(IntegrityError):
+            exam.save()
+
+        self.assert_files_exist(
+            exam, file_names, should_exist=True, stage="after failed save"
+        )
