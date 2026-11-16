@@ -77,6 +77,9 @@ class ExamTaskFactory(factory.django.DjangoModelFactory):
         e8 = factory.Trait(
             exam=factory.SubFactory(ExamFactory, e8=True),
         )
+        with_intro = factory.Trait(
+            intro_screen=factory.django.ImageField(filename="intro_screen.png"),
+        )
 
     exam = factory.SubFactory(ExamFactory)
     number = factory.Sequence(lambda n: n + 1)
