@@ -4,7 +4,7 @@ from django.core.files.base import ContentFile
 from django.db import models
 from django.test import TestCase, override_settings
 from examination_tasks.choices import LevelTypeChoices
-from examination_tasks.tests.factories import ExamFactory
+from examination_tasks.tests.factories import ExamFactory, ExamTaskFactory
 from factory.django import DjangoModelFactory
 
 IN_MEMORY_STORAGES = {
@@ -175,3 +175,17 @@ class ExamFileSignalTests(FileSignalTestsMixin, TestCase):
 
     def change_non_file_field(self, instance: models.Model) -> None:
         instance.level_type = LevelTypeChoices.EXTENDED
+
+
+@override_settings(STORAGES=IN_MEMORY_STORAGES)
+class ExamTaskFileSignalTests(FileSignalTestsMixin, TestCase):
+    """Tests for cleaning up exam task files in the storage."""
+
+    factory = ExamTaskFactory
+    FILE_FIELDS = ("intro_screen",)
+
+    def create_instance(self) -> models.Model:
+        return self.factory(with_intro=True)
+
+    def change_non_file_field(self, instance: models.Model) -> None:
+        instance.intro_content = "This is an intro."
