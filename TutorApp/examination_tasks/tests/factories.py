@@ -115,6 +115,18 @@ class ExamSubtaskFactory(factory.django.DjangoModelFactory):
         null_subnumber = factory.Trait(
             subnumber=None,
         )
+        with_instruction = factory.Trait(
+            instruction_screen=factory.django.ImageField(
+                filename="instruction_screen.png"
+            ),
+        )
+        with_solution = factory.Trait(
+            solution_screen=factory.django.ImageField(filename="solution_screen.png")
+        )
+        with_all_screens = factory.Trait(
+            with_instruction=True,
+            with_solution=True,
+        )
 
     exam_task = factory.SubFactory(ExamTaskFactory)
     subnumber = factory.Sequence(lambda n: n + 1)
