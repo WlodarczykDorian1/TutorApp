@@ -124,23 +124,25 @@ def remember_old_file_names(
 
 
 def delete_replaced_files(
-    sender: type[models.Model],
     instance: models.Model,
-    file_field_names: list[str],
     raw: bool,
 ) -> None:
     """
     Schedule deletion of old files that are being replaced with new ones.
 
+    Old file names are saved using the function remember_old_file_names().
+
     Args:
-        sender: Model class that sent the signal.
-        instance: Model instance about to be saved.
-        file_field_names: List of file field names from model.
+        instance: Model instance that is already saved.
         raw: True when the instance is saved as-is from a fixture (loaddata).
             The database may be inconsistent then, so nothing is done.
-
+    """
+    old = instance.__dict__.pop("_old_file_names", None)
 
     if old is None:
+        return
+
+    if raw:
         return
 
     for field_name in old:
@@ -149,7 +151,6 @@ def delete_replaced_files(
 
         if old_name != new_file.name:
             register_file_deletion(new_file.storage, old_name)
-    """
 
 
 @receiver(pre_save, sender=ExamSubtask)
