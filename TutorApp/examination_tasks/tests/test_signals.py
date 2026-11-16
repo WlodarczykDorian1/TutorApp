@@ -67,6 +67,16 @@ class FileSignalTestsMixin(FileStorageAssertionMixin):
     factory: type[DjangoModelFactory]
     FILE_FIELDS: tuple[str, ...]
 
+    def create_instance(self) -> models.Model:
+        """Create an instance of the model and return it.
+
+        Subclasses can override this method if they need to pass
+        custom factory arguments, such as traits.
+
+        Returns:
+            Instance saved in database with filled file fields."""
+        return self.factory()
+
     def change_non_file_field(self, instance: models.Model) -> None:
         """
         Change a model field that is not a file field.
