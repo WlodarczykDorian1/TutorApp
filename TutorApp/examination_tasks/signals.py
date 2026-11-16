@@ -94,6 +94,35 @@ def delete_subtask_screens(
     )
 
 
+def remember_old_file_names(
+    sender: type[models.Model],
+    instance: models.Model,
+    file_field_names: list[str],
+    raw: bool,
+) -> None:
+    """
+    Remember old file names before they are saved.
+
+    Old file names are retained in _old_file_names.
+
+    Args:
+        sender: Model class that sent the signal.
+        instance: Model instance about to be saved.
+        file_field_names: List of file field names from model.
+        raw: True when the instance is saved as-is from a fixture (loaddata).
+            The database may be inconsistent then, so nothing is done.
+    """
+    if raw:
+        return
+
+    if instance._state.adding:
+        return
+
+    instance._old_file_names = (
+        sender._default_manager.filter(pk=instance.pk).values(*file_field_names).first()
+    )
+
+
 def delete_replaced_files(
     sender: type[models.Model],
     instance: models.Model,
@@ -109,16 +138,7 @@ def delete_replaced_files(
         file_field_names: List of file field names from model.
         raw: True when the instance is saved as-is from a fixture (loaddata).
             The database may be inconsistent then, so nothing is done.
-    """
-    if raw:
-        return
 
-    if instance._state.adding:
-        return
-
-    old = (
-        sender._default_manager.filter(pk=instance.pk).values(*file_field_names).first()
-    )
 
     if old is None:
         return
@@ -129,6 +149,7 @@ def delete_replaced_files(
 
         if old_name != new_file.name:
             register_file_deletion(new_file.storage, old_name)
+    """
 
 
 @receiver(pre_save, sender=ExamSubtask)
