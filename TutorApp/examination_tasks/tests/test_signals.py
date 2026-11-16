@@ -93,7 +93,7 @@ class FileSignalTestsMixin(FileStorageAssertionMixin):
 
     def test_files_are_removed_after_delete(self) -> None:
         """Deleting an instance removes its files from the storage."""
-        instance = self.factory()
+        instance = self.create_instance()
 
         file_names = self.get_file_names(instance, self.FILE_FIELDS)
 
@@ -112,7 +112,7 @@ class FileSignalTestsMixin(FileStorageAssertionMixin):
         """Replacing a file removes the old one and keeps the other files intact."""
         for replaced_field in self.FILE_FIELDS:
             with self.subTest(replaced_field=replaced_field):
-                instance = self.factory()
+                instance = self.create_instance()
                 file_names = self.get_file_names(instance, self.FILE_FIELDS)
 
                 self.assert_files_exist(
@@ -148,7 +148,7 @@ class FileSignalTestsMixin(FileStorageAssertionMixin):
 
     def test_files_are_kept_when_other_field_changes(self) -> None:
         """Changing another field keeps files in the storage."""
-        instance = self.factory()
+        instance = self.create_instance()
         file_names = self.get_file_names(instance, self.FILE_FIELDS)
 
         self.assert_files_exist(
