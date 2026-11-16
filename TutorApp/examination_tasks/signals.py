@@ -154,14 +154,14 @@ def delete_replaced_files(
 
 
 @receiver(pre_save, sender=ExamSubtask)
-def delete_replaced_exam_subtask_screens(
+def remember_old_exam_subtask_screens(
     sender: type[ExamSubtask],
     instance: ExamSubtask,
     raw: bool,
     **kwargs: Any,
 ) -> None:
     """
-    Delete old screens when they are replaced with new ones.
+    Remember old screens before they are replaced with new ones.
 
     Args:
         sender: Model class that sent the signal.
@@ -170,20 +170,20 @@ def delete_replaced_exam_subtask_screens(
             The database may be inconsistent then, so nothing is done.
         **kwargs: Extra signal arguments (unused).
     """
-    delete_replaced_files(
+    remember_old_file_names(
         sender, instance, ["instruction_screen", "solution_screen"], raw
     )
 
 
 @receiver(pre_save, sender=Exam)
-def delete_replaced_exam_files(
+def remember_old_exam_files(
     sender: type[Exam],
     instance: Exam,
     raw: bool,
     **kwargs: Any,
 ) -> None:
     """
-    Delete old exam and solution file when they are replaced with new ones.
+    Remember old exam and solution file before they are replaced with new ones.
 
     Args:
         sender: Model class that sent the signal.
@@ -192,18 +192,18 @@ def delete_replaced_exam_files(
             The database may be inconsistent then, so nothing is done.
         **kwargs: Extra signal arguments (unused).
     """
-    delete_replaced_files(sender, instance, ["tasks_file", "solutions_file"], raw)
+    remember_old_file_names(sender, instance, ["tasks_file", "solutions_file"], raw)
 
 
 @receiver(pre_save, sender=ExamTask)
-def delete_replaced_exam_task_screen(
+def remember_old_exam_task_screen(
     sender: type[ExamTask],
     instance: ExamTask,
     raw: bool,
     **kwargs: Any,
 ) -> None:
     """
-    Delete old exam task intro screen when it is replaced with new one.
+    Remember old exam task intro screen before it is replaced with new one.
 
     Args:
         sender: Model class that sent the signal.
@@ -212,4 +212,4 @@ def delete_replaced_exam_task_screen(
             The database may be inconsistent then, so nothing is done.
         **kwargs: Extra signal arguments (unused).
     """
-    delete_replaced_files(sender, instance, ["intro_screen"], raw)
+    remember_old_file_names(sender, instance, ["intro_screen"], raw)
