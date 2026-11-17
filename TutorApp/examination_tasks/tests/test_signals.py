@@ -173,6 +173,23 @@ class FileSignalTestsMixin(FileStorageAssertionMixin):
             instance, file_names, should_exist=True, stage="after save"
         )
 
+    def test_files_are_removed_after_queryset_delete(self) -> None:
+        """Deleting instances through a queryset removes their files from the storage."""
+        instance = self.create_instance()
+
+        file_names = self.get_file_names(instance, self.FILE_FIELDS)
+
+        self.assert_files_exist(
+            instance, file_names, should_exist=True, stage="before delete"
+        )
+
+        with self.captureOnCommitCallbacks(execute=True):
+            type(instance)._default_manager.filter(pk=instance.pk).delete()
+
+        self.assert_files_exist(
+            instance, file_names, should_exist=False, stage="after delete"
+        )
+
 
 @override_settings(STORAGES=IN_MEMORY_STORAGES)
 class ExamFileSignalTests(FileSignalTestsMixin, TestCase):
