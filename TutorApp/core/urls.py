@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -33,6 +34,7 @@ urlpatterns = [
     path("select2/", include("django_select2.urls")),
     path("courses/", include("courses.urls", namespace="courses")),
     path("plans/", include("plans.urls", namespace="plans")),
+    path("", RedirectView.as_view(pattern_name="users:login"), name="home"),
 ]
 
 if settings.DEBUG:
