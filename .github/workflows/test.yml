@@ -72,6 +72,12 @@ jobs:
           PG_HOST: ${{ secrets.DB_HOST }}
           PG_PASSWORD: ${{ secrets.DB_PASSWORD }}
           SECRET_KEY: test-secret-key
+          STRIPE_SECRET_KEY: sk_test_dummy
+          STRIPE_WEBHOOK_SECRET: whsec_dummy
+          CELERY_BROKER_URL: memory://
+          CELERY_RESULT_BACKEND: cache+memory://
+          DEBUG: env.DEBUG
+          YOUTUBE_API_KEY: env.YOUTUBE_API_KEY
 
       - name: Test summary
         if: always()
