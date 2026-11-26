@@ -1,4 +1,4 @@
-import factory
+import factory.fuzzy
 from courses.tests.factories import SectionFactory
 from examination_tasks.choices import LevelTypeChoices
 from quizes.models import Answer, Question, Quiz
@@ -18,7 +18,7 @@ class QuestionFactory(factory.django.DjangoModelFactory):
 
     text = factory.Faker("text", max_nb_chars=250)
     quiz = factory.SubFactory(QuizFactory)
-    level_type = factory.fuzzy.FuzzyChoice(choice[0] for choice in LevelTypeChoices)
+    level_type = factory.fuzzy.FuzzyChoice(LevelTypeChoices.values)
     picture = None
     explanation = factory.Faker("text", max_nb_chars=250)
     explanation_picture = None
