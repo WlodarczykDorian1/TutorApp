@@ -69,7 +69,7 @@ class LoginViewTests(TestCase):
     def test_login_view_authenticated_redirects(self):
         self.client.login(username=self.user.username, password=self.password)
         response = self.client.get(self.url)
-        self.assertRedirects(response, "/")
+        self.assertRedirects(response, reverse("users:home"))
 
     def test_login_success(self):
         data = {
@@ -77,7 +77,7 @@ class LoginViewTests(TestCase):
             "password": self.password,
         }
         response = self.client.post(self.url, data)
-        self.assertRedirects(response, "/")
+        self.assertRedirects(response, reverse("users:home"))
 
     def test_login_failure(self):
         data = {
