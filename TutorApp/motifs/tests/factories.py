@@ -1,5 +1,5 @@
 import factory
-from examination_tasks.tests.factories import SectionFactory
+from courses.tests.factories import SectionFactory
 from factory.django import DjangoModelFactory
 
 from .models import Motif
