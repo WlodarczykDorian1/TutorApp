@@ -60,6 +60,7 @@ INSTALLED_APPS += INSTALLED_EXTENSIONS
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "DevApp <dev@example.com>"
+LOGIN_URL = "users:login"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
