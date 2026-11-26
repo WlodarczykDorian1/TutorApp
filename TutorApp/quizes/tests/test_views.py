@@ -3,7 +3,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 from quizes.factories import QuizFactory
 from quizes.models import Answer, Question, Quiz
-from users.factories import TeacherFactory, UserFactory
+from users.tests.factories import TeacherFactory, UserFactory
 
 
 class AddQuizViewTests(TestCase):
