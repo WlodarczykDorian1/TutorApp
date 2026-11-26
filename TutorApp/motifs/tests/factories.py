@@ -1,8 +1,7 @@
 import factory
 from courses.tests.factories import SectionFactory
 from factory.django import DjangoModelFactory
-
-from .models import Motif
+from motifs.models import Motif
 
 
 class MotifFactory(DjangoModelFactory):
