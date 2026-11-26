@@ -1,5 +1,5 @@
+from courses.tests.factories import SectionFactory
 from django.test import Client, TestCase
-from examination_tasks.tests.factories import SectionFactory
 from users.tests.factories import TeacherFactory, UserFactory
 
 from ..models import Motif
