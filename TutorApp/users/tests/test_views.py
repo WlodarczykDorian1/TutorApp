@@ -8,7 +8,7 @@ User = get_user_model()
 
 class UserRegisterViewTests(TestCase):
     def setUp(self):
-        self.url = reverse("register")
+        self.url = reverse("users:register")
 
     def test_register_view_get(self):
         response = self.client.get(self.url)
@@ -91,7 +91,7 @@ class LoginViewTests(TestCase):
 
 class LogoutViewTests(TestCase):
     def setUp(self):
-        self.url = reverse("logout")
+        self.url = reverse("users:logout")
         self.password = "StrongPassword123!"
         self.user = UserFactory(password=self.password)
 
