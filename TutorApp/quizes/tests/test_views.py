@@ -175,7 +175,7 @@ class AddQuestionViewTests(TestCase):
     def test_post_question_without_existing_quiz(self) -> None:
         """Test case that post with non existing quiz"""
         self.client.force_login(self.teacher)
-        invalid_url = reverse("quizes:add_question", kwargs={"quiz_pk": -2})
+        invalid_url = reverse("quizes:add_question", kwargs={"quiz_pk": 200})
         response = self.client.post(invalid_url, data=self.valid_data)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(Question.objects.count(), 0)
