@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional, Union
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.functional import Promise
@@ -26,6 +26,11 @@ class AddQuestion(TeacherRequiredMixin, CreateView):
     form_class = QuestionForm
     template_name = "quizes/add_question.html"
 
+    def setup(self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
+        """Load the quiz from the URL or raise 404 if it doesn't exist."""
+        super().setup(request, *args, **kwargs)
+        self.quiz = get_object_or_404(Quiz, pk=kwargs["quiz_pk"])
+
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
 
@@ -40,10 +45,7 @@ class AddQuestion(TeacherRequiredMixin, CreateView):
 
         if formset.is_valid():
             self.object = form.save(commit=False)
-            quiz_pk = self.kwargs["quiz_pk"]
-            quiz = get_object_or_404(Quiz, pk=quiz_pk)
-
-            self.object.quiz = quiz
+            self.object.quiz = self.quiz
             self.object.save()
             formset.instance = self.object
             formset.save()
@@ -55,8 +57,7 @@ class AddQuestion(TeacherRequiredMixin, CreateView):
             return self.form_invalid(form)
 
     def get_success_url(self) -> str:
-        quiz_pk = self.kwargs["quiz_pk"]
-        return reverse("quizes:add_question", kwargs={"quiz_pk": quiz_pk})
+        return reverse("quizes:add_question", kwargs={"quiz_pk": self.quiz.pk})
 
 
 class QuestionReviewView(LoginRequiredMixin, DetailView):
