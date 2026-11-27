@@ -155,7 +155,7 @@ class AddQuestionViewTests(TestCase):
         """Test case that post no correct answer"""
         self.client.force_login(self.teacher)
         invalid_data = self.valid_data.copy()
-        invalid_data["answer_set-2-is_correct"] = False
+        invalid_data["answers-2-is_correct"] = False
         response = self.client.post(self.url, data=invalid_data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Answer.objects.count(), 0)
