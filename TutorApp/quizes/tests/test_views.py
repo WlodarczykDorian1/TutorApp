@@ -18,12 +18,12 @@ class AddQuizViewTests(TestCase):
         self.success_url = reverse("quizes:quiz_list")
 
     def test_unauthorized_access(self) -> None:
-        """Test case that checks if unauthorized access is working"""
+        """Anonymous user is redirected to the login page."""
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 302)
+
         self.assertRedirects(
             response,
-            "/accounts/login/?next=%s" % self.url,
+            f"{reverse('users:login')}?next={self.url}",
             fetch_redirect_response=False,
         )
 
