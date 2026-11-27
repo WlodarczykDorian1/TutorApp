@@ -43,7 +43,9 @@ class UserRegisterViewTests(TestCase):
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 200)
         self.assertFormError(
-            response, "form", "password2", "The two password fields didn’t match."
+            response.context["form"],
+            "password2",
+            "The two password fields didn’t match.",
         )
         self.assertEqual(User.objects.count(), 0)
 
