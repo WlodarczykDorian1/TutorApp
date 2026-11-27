@@ -21,7 +21,7 @@ class UserRegisterViewTests(TestCase):
             "password1": "StrongPassword123!",
             "password2": "StrongPassword123!",
             "email": "newuser@example.com",
-            "school_type": "SECONDARY",
+            "school_type": 2,
         }
         response = self.client.post(self.url, data, follow=True)
 
