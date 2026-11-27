@@ -42,7 +42,10 @@
                         {% include 'navigation_links/motifs.html' %}
                         {% include 'navigation_links/courses.html' %}
                         <div class="nav-menu">
-                            <a href="{% url 'users:logout' %}">{% trans "Logout" %}</a>
+                            <form method="post" action="{% url 'users:logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link p-0 align-baseline">{% trans "Logout" %}</button>
+                            </form>
                         </div>
                     {% else %}
                         <a href="#">{% trans "Home" %}</a>

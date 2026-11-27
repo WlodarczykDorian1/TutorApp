@@ -95,7 +95,12 @@ class LoginView(View):
 
 
 class LogoutView(View):
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+    """Log the current user out and redirect to the login page.
+
+    Only POST is accepted to protect against CSRF-based logout.
+    """
+
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         service = UserService(user=request.user)
         service.logout_user(request)
         return redirect("users:login")
