@@ -1,5 +1,6 @@
 from courses.tests.factories import SectionFactory
 from django.test import Client, TestCase
+from django.urls import reverse
 from users.tests.factories import TeacherFactory, UserFactory
 
 from ..models import Motif
@@ -12,11 +13,13 @@ class AddMotifViewTest(TestCase):
 
         self.client = Client()
 
-    def test_get_add_motif_page(self):
-        """Test GET request to add motif page"""
-        response = self.client.get("/motifs/add/")
+    def test_get_add_motif_page_anonymous_redirects_to_login(self):
+        """Anonymous user is redirected to the login page."""
+        url = "/motifs/add/"
 
-        self.assertEqual(response.status_code, 403)
+        response = self.client.get(url)
+
+        self.assertRedirects(response, f"{reverse('users:login')}?next={url}")
 
     def test_can_teacher_access_page(self):
         """Test case that checks if teacher can access the page"""
