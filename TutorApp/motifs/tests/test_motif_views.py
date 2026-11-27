@@ -44,6 +44,7 @@ class AddMotifViewTest(TestCase):
             "level_type": 1,
             "is_mandatory": True,
             "is_in_matriculation_sheets": True,
+            "explanation_link": "https://www.youtube.com/watch?v=test",
         }
 
         response = self.client.post("/motifs/add/", data=data)
