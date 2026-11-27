@@ -302,6 +302,7 @@ class AddMotifViewTest(TestCase):
 
     def test_filter_empty_motif_list(self):
         """Test that checks if empty motif list works"""
+        MotifFactory(subject=1)
 
         user = UserFactory()
 
