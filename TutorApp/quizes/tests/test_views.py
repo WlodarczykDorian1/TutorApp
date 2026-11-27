@@ -207,7 +207,7 @@ class AddQuestionViewTests(TestCase):
         """Test case that post answer with too long text"""
         self.client.force_login(self.teacher)
         invalid_data = self.valid_data.copy()
-        invalid_data["answer_set-0-text"] = "x" * 256
+        invalid_data["answers-0-text"] = "x" * 256
         response = self.client.post(self.url, data=invalid_data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Question.objects.count(), 0)
