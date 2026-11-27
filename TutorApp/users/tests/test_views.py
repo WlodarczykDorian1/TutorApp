@@ -98,7 +98,7 @@ class LogoutViewTests(TestCase):
     def test_logout(self):
         self.client.login(username=self.user.username, password=self.password)
         response = self.client.post(self.url)
-        self.assertRedirects(response, reverse("login"))
+        self.assertRedirects(response, reverse("users:login"))
         self.assertFalse("_auth_user_id" in self.client.session)
 
 
