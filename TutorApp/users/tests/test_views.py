@@ -66,7 +66,7 @@ class LoginViewTests(TestCase):
     def test_login_view_get(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "login.html")
+        self.assertTemplateUsed(response, "users/login.html")
 
     def test_login_view_authenticated_redirects(self):
         self.client.login(username=self.user.username, password=self.password)
